@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../src/css/tailwindbuild.css">
+    <script src="https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.min.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/gun/examples/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
+</head>
+<body>
+
+
+    <div class="relative">
+        <div class="navbar-backdrop fixed inset-0 bg-white opacity-25"></div>
+        <div class="z-50 fixed top-0 right-0 bottom-0 w-full max-w-md bg-white shadow overflow-y-scroll">
+          <div class="p-6 md:pt-12 md:pb-6 md:px-12 bg-white">
+   
+            <div class="text-right">
+              <a class="inline-block ml-auto" href="#">
+                <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12.0273" y="4.53223" width="2" height="12" transform="rotate(45 12.0273 4.53223)" fill="#161616"></rect><rect x="13.4336" y="13.0186" width="2" height="12" transform="rotate(135 13.4336 13.0186)" fill="#161616"></rect></svg>
+              </a>
+            </div>
+            <div class="flex mb-12 items-center">
+              <h3 class="text-4xl font-bold font-heading">Your cart</h3>
+            </div>
+            <div class="flex flex-wrap -mx-4 mb-10 items-center">
+              <div class="w-full md:w-3/3 px-4">
+                <div>
+                  <h3 class="mb-1 text-xl font-bold font-heading" id="productName"></h3>
+                  <p class="mb-4 text-gray-500" id="productType"></p>
+                  <div class="flex flex-wrap items-center justify-between">
+                    <div class="inline-flex items-center px-4 font-semibold font-heading text-gray-500 border border-gray-200 focus:ring-blue-300 focus:border-blue-300 rounded-md">
+                      <button class="py-2 hover:text-gray-700">
+                        <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.35"><rect x="12" width="2" height="12" transform="rotate(90 12 0)" fill="currentColor"></rect></g></svg>
+                      </button>
+                      <input class="w-12 m-0 px-2 py-4 text-center md:text-right border-0 focus:ring-transparent focus:outline-none rounded-md" type="number" placeholder="1">
+                      <button class="py-2 hover:text-gray-700">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.35"><rect x="5" width="2" height="12" fill="currentColor"></rect><rect x="12" y="5" width="2" height="12" transform="rotate(90 12 5)" fill="currentColor"></rect></g></svg>
+                      </button>
+                    </div>
+                    <p class="text-lg text-blue-500 font-bold font-heading" id="productPrice"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 md:p-12 bg-gray-200">
+            <h2 class="mb-6 text-4xl font-bold font-heading text-black">Cart totals</h2>
+            <div class="flex mb-8 items-center justify-between pb-5 border-b border-blue-100">
+              <span class="text-blue-600">Subtotal</span>
+              <span class="text-xl font-bold font-heading text-black" id="subTotal"></span>
+            </div>
+            <h4 class="mb-2 text-xl font-bold font-heading text-black">Shipping</h4>
+            <div class="flex mb-10 justify-between items-center">
+              <span class="text-blue-600">Flat shipping rate</span>
+              <span class="text-xl font-bold font-heading text-black" id="productShipping"></span>
+            </div>
+            <div class="flex mb-10 justify-between items-center">
+              <span class="text-xl font-bold font-heading text-black">Order total</span>
+              <span class="text-xl font-bold font-heading text-black" id="orderTotal"></span>
+            </div>
+
+
+
+            <div class="text-center">
+                <button class="w-full bg-green-500 text-white pay-button rounded-md   text-2xl  py-2 px-4  font-heading">Pay<button>
+              </div>
+              <div id="status"></div>
+
+            <br/><br/><br/>
+
+            <div class="text-center">
+                <button class="" class="pay-button">Powered By ERAPAY<button>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+
+        //product
+
+
+        const paymentAddress = '0x192c96bfee59158441f26101b2db1af3b07feb40'
+ 
+
+        const pub = "tUCnBoOeXEDdvic8fHRRm2i-8abZdwvd6OZDjoK48N0.e3BFQBIfncU6J0AByxnjO9XmuWxuIQ_nb0a37lf9st0"
+        const product_name = "Glasses"
+        const product_price = 0.02
+        const product_type = "Physible"
+        //this is a multiplier to ship at 10% of product cost
+        const product_shipping = 10
+
+
+        //Dont edit as these are calculations
+        const product_shipping_flat = ((0.001/100) * product_shipping)
+        const order_total = product_shipping_flat + product_price
+
+
+        //upper div
+        $("#productName").text(product_name)
+        $("#productType").text(product_type)
+        $("#productPrice").text(product_price)
+
+        //lower div
+        $("#productShipping").text(product_shipping_flat)
+        $("#subTotal").text(product_price)
+        $("#orderTotal").text(order_total)
+
+
+        
+
+
+        var transactionsGun = Gun(['https://gun-manhattan.herokuapp.com/gun', 'https://gun-manhattan.herokuapp.com/gun'])
+        window.addEventListener('load', async () => {
+          if (window.ethereum) {
+            window.web3 = new Web3(ethereum);
+            try {
+              await ethereum.enable();
+              initPayButton()
+            } catch (err) {
+              $('#status').html('User denied account access', err)
+            }
+          } else if (window.web3) {
+            window.web3 = new Web3(web3.currentProvider)
+            initPayButton()
+          } else {
+            $('#status').html('No Metamask (or other Web3 Provider) installed')
+          }
+        })
+    
+        const initPayButton = () => {
+          $('.pay-button').click(() => {
+            // paymentAddress is where funds will be send to
+
+
+            var rand_int = Math.floor((Math.random() * 999999999) + 1);
+    
+    
+    
+    
+            web3.eth.sendTransaction({
+              to: paymentAddress,
+              value: web3.toWei(order_total, 'ether')
+            }, (err, transactionId) => {
+              if  (err) {
+                console.log('Payment failed', err)
+                $('#status').html('Payment failed')
+                var transaction = {
+                  name: product_name,
+                  id: rand_int,
+                  price: product_price,
+                  status:"Failed"
+                }
+                transactionsGun.get(pub).get("transactions").get(rand_int).put(transaction)
+              } else {
+                console.log('Payment successful', transactionId)
+                $('#status').html('Payment successful')
+    
+                var transaction = {
+                  name: product_name,
+                  id: rand_int,
+                  price: product_price,
+                  status:"Successful"
+                }
+                transactionsGun.get(pub).get("transactions").get(rand_int).put(transaction)
+              }
+            })
+          })
+        }
+    
+        function check(){
+          const pub = "tUCnBoOeXEDdvic8fHRRm2i-8abZdwvd6OZDjoK48N0.e3BFQBIfncU6J0AByxnjO9XmuWxuIQ_nb0a37lf9st0"
+          transactionsGun.get(pub).get("transactions").map(v => {console.log(v.id)})
+        }
+      </script>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+@font-face{
+  font-family: arialBlack;
+  src: url(arial-black.ttf) ;
+}
+
+.header-content{
+  display: none;
+}
+
+
+
+@font-face{
+  font-family: monum;
+  src: url(monum.otf) ;
+}
+
+.HomepageHeroGradient {
+  --gradientColorZero: #a960ee;
+  --gradientColorOne: #ff333d;
+  --gradientColorTwo: #90e0ff;
+  --gradientColorThree: #ffcb57;
+  --gradientColorZeroTransparent: rgba(169,96,238,0);
+  --gradientColorOneTransparent: rgba(255,51,61,0);
+  --gradientColorTwoTransparent: rgba(144,224,255,0);
+  --gradientColorThreeTransparent: rgba(255,203,87,0);
+  --gradientAngle: var(--angleStrong);
+  --gradientHeight: calc(100% + var(--sectionPaddingTop) + var(--transformOriginX)*var(--sectionAngleSin));
+  --offsetX: var(--gutterWidth);
+  --transformOriginX: -60px;
+  --sectionAngleSin: var(--angleStrongSin);
+  position: absolute;
+  bottom: 0;
+  top: auto;
+  left: calc(var(--offsetX)*-1);
+  width: var(--windowWidth);
+  min-width: 1000px;
+  height: var(--gradientHeight);
+  transform-origin: var(--transformOriginX) 100%;
+  transform: skewY(var(--gradientAngle));
+  overflow: hidden;
+  border: none;
+}
+
+.Gradient:after {
+  z-index: -1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(var(--gradientColorZero) 40%,var(--gradientColorTwoTransparent) 60%) -620px -180px no-repeat,radial-gradient(var(--gradientColorThree) 33%,var(--gradientColorThreeTransparent) 67%) -120px -24px no-repeat,radial-gradient(var(--gradientColorTwo) 40%,var(--gradientColorTwoTransparent) 70%) -470px 150px no-repeat,var(--gradientColorZero);
+}
+
+.Gradient__canvas.isLoaded {
+  opacity: 1;
+  /* transition: opacity 1.8s ease-in 50ms; */
+}
+
+.Gradient__canvas {
+  position: relative;
+  display: block;
+  width: inherit;
+  height: 100%;
+  opacity: 0;
+}
+
+.HomepageHeroHeader {
+  --titleFontMin: 50;
+  --titleFontMax: 78;
+  --viewportMin: var(--viewportWidthSmall);
+  --viewportMax: var(--viewportWidthMedium);
+  --titleFontSize: calc(var(--titleFontMin)*1px + (var(--titleFontMax) - var(--titleFontMin))*(var(--windowWidth) - var(--viewportMin)*1px)/(var(--viewportMax) - var(--viewportMin)));
+  --titleLineHeight: 1.04;
+  --titleLetterSpacing: -0.04em;
+  --titleWeight: var(--fontWeightBold);
+  --titleFont: var(--titleWeight) var(--titleFontSize)/var(--titleLineHeight) var(--fontFamily);
+  --headerMarginTop: 100px;
+  --headerPadding: 0 var(--headerPaddingRight) 0 var(--headerPaddingLeft);
+  --captionHeight: 25px;
+  --captionTitleGap: 48px;
+  --captionMarginTop: calc(var(--headerMarginTop) - var(--captionHeight) - var(--captionTitleGap));
+  position: relative;
+  min-width: 0;
+  padding: var(--headerPadding);
+}
+
+.bgEraPay{
+  background-image: url("../assets/erapaybg.svg");
+}
+
+#cycle:after {
+  -webkit-animation: cycle 4s infinite; /* Safari 4+ */
+  -moz-animation: cycle 4s infinite; /* Fx 5+ */
+  -o-animation: cycle 4s infinite; /* Opera 12+ */
+  animation: cycle 4s infinite; /* IE 10+, Fx 29+ */
+}
+}
+@keyframes cycle {
+0% {
+  content: "Corgi";
+}
+33% {
+  content: "Shih Tzu";
+}
+66% {
+  content: "Pug";
+}
+100% {
+  content: "Dachshund";
+}
+}
+

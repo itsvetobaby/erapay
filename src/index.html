@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>ERAPAY</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Social Networking Freedom">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta property="og:title" content="ERAPAY" />
+  <meta property="og:description" content="Social Networking Freedom" />
+  <meta property="og:url" content="https://ERAPAYrepos.com" />
+
+  <meta property="og:image" content="" />
+
+  <meta name="twitter:card" content="summary"></meta>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" sizes="180x180" href="./img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./img/erapayfavi.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="./img/erapayfavi.ico">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="mask-icon" href="./img/safari-pinned-tab.svg" color="#74d5f1">
+  <link rel="shortcut icon" href="./erapayfavi.ico">
+  <meta name="msapplication-TileColor" content="#74d5f1">
+  <meta name="msapplication-config" content="./browserconfig.xml">
+  <meta name="theme-color" content="#74d5f1">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script src="https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.min.js"></script>
+
+
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+  <link rel="stylesheet" type="text/css" href="./css/tailwindbuild.css">
+  <link rel="stylesheet" type="text/css" href="./css/helpers.css">
+
+
+</head>
+
+<body>
+  <script src="./js/lib/webtorrent.min.js"></script>
+  <script> // needed for electron nodeIntegration: true
+  if (typeof require !== 'undefined') {
+    window.nodeRequire = require;
+  }
+  delete window.require;
+  delete window.exports;
+  delete window.module;
+  </script>
+  <script src="./js/lib/jquery.js"></script>
+
+  <script src="./js/lib/colap.js"></script>
+
+  <script src="./js/lib/pica.min.js"></script>
+  <script src="./js/lib/underscore-min.js"></script>
+  <script src="./js/lib/gun.js"></script>
+  <script src="./js/lib/open.js"></script>
+  <script src="./js/lib/sea.js"></script>
+  <script src="./js/lib/nts.js"></script>
+  <script src="./js/lib/radix.js"></script>
+  <script src="./js/lib/radisk.js"></script>
+  <script src="./js/lib/store.js"></script>
+  <script src="./js/lib/rindexed.js"></script>
+  <script src="./js/lib/iris.min.js"></script>
+  <script src="./js/lib/emoji-button.js"></script>
+  <script src="./js/lib/Autolinker.min.js"></script>
+  <script src="./js/lib/qrcode.min.js"></script>
+  <script src="./js/lib/qr.zxing.js"></script>
+  <script type="module" src="./js/Main.js"></script>
+
+  <script src="./js/components/carts/charts-demo.js"></script>
+  <script src="./js/components/carts/main.js"></script>
+
+  <script type="text/javascript">
+
+    //product
+
+
+    const paymentAddress = '0x192c96bfee59158441f26101b2db1af3b07feb40'
+
+
+    const pub = "tUCnBoOeXEDdvic8fHRRm2i-8abZdwvd6OZDjoK48N0.e3BFQBIfncU6J0AByxnjO9XmuWxuIQ_nb0a37lf9st0"
+    const product_name = "Glasses"
+    const product_price = 0.02
+    const product_type = "Physible"
+    //this is a multiplier to ship at 10% of product cost
+    const product_shipping = 10
+
+
+    //Dont edit as these are calculations
+    const product_shipping_flat = ((0.001/100) * product_shipping)
+    const order_total = product_shipping_flat + product_price
+
+
+    //upper div
+    $("#productName").text(product_name)
+    $("#productType").text(product_type)
+    $("#productPrice").text(product_price)
+
+    //lower div
+    $("#productShipping").text(product_shipping_flat)
+    $("#subTotal").text(product_price)
+    $("#orderTotal").text(order_total)
+
+
+    
+
+
+    var transactionsGun = Gun(['https://gun-manhattan.herokuapp.com/gun', 'https://gun-manhattan.herokuapp.com/gun'])
+    window.addEventListener('load', async () => {
+      if (window.ethereum) {
+        window.web3 = new Web3(ethereum);
+        try {
+          await ethereum.enable();
+          initPayButton()
+        } catch (err) {
+          $('#status').html('User denied account access', err)
+        }
+      } else if (window.web3) {
+        window.web3 = new Web3(web3.currentProvider)
+        initPayButton()
+      } else {
+        $('#status').html('No Metamask (or other Web3 Provider) installed')
+      }
+    })
+
+    const initPayButton = () => {
+      $('.pay-button').click(() => {
+        // paymentAddress is where funds will be send to
+
+
+        var rand_int = Math.floor((Math.random() * 999999999) + 1);
+
+
+
+
+        web3.eth.sendTransaction({
+          to: paymentAddress,
+          value: web3.toWei(order_total, 'ether')
+        }, (err, transactionId) => {
+          if  (err) {
+            console.log('Payment failed', err)
+            $('#status').html('Payment failed')
+            var transaction = {
+              name: product_name,
+              id: rand_int,
+              price: product_price,
+              status:"Failed"
+            }
+            transactionsGun.get(pub).get("transactions").get(rand_int).put(transaction)
+          } else {
+            console.log('Payment successful', transactionId)
+            $('#status').html('Payment successful')
+
+            var transaction = {
+              name: product_name,
+              id: rand_int,
+              price: product_price,
+              status:"Successful"
+            }
+            transactionsGun.get(pub).get("transactions").get(rand_int).put(transaction)
+          }
+        })
+      })
+    }
+
+    function check(){
+      const pub = "tUCnBoOeXEDdvic8fHRRm2i-8abZdwvd6OZDjoK48N0.e3BFQBIfncU6J0AByxnjO9XmuWxuIQ_nb0a37lf9st0"
+      transactionsGun.get(pub).get("transactions").map(v => {console.log(v.id)})
+    }
+  </script>
+
+
+</body>
+
+</html>
