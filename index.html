@@ -7,98 +7,160 @@
   <title>Document</title>
   <link rel="stylesheet" href="./src/css/tailwindbuild.css">
   <link rel="stylesheet" href="./src/css/style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+
+  <script>
+    var text = ["Payments", "Subscriptions", "Checkouts", "Reoccuring Billing", "Tipping",  "Paid Downloads"];
+
+
+    var counter = 0;
+
+    var inst = setInterval(change, 1400);
+
+    function change() {
+      document.getElementById("changeText").innerHTML = text[counter];
+
+      counter++;
+      if (counter >= text.length) {
+        counter = 0;
+        // clearInterval(inst); // uncomment this if you want to stop refreshing after one cycle
+      }
+    }
+  </script>
+  <section class="py-8 px-4 lg:px-10 bg-white">
+    <nav class="relative flex justify-between items-center">
+      <a class="text-2xl text-gray-900 font-bold" href="#">
+        <h2 class="mb-8 text-4xl  font-bold font-heading" style="font-family: arialBlack;">ERAPAY</h2>
+      </a>
+
+
+      <button class="navbar-burger flex items-center p-3 hover:bg-gray-50 text-gray-900 rounded">
+        <svg class="w-10 h-3" width="39" height="13" viewBox="0 0 39 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="39" height="2" rx="1" fill="currentColor"></rect><rect x="19" y="11" width="20" height="2" rx="1" fill="currentColor"></rect>
+          <title>Mobile menu</title>
+        </svg>
+      </button>
+    </nav>
+    <div class="hidden navbar-menu fixed top-0 left-0 bottom-0 w-5/6 max-w-sm z-50">
+      <div class="navbar-backdrop fixed inset-0 bg-blue-600 opacity-80"></div>
+      <nav class="relative flex flex-col py-8 w-full h-full bg-gray-800 overflow-y-auto">
+        <div class="flex items-center mb-16 pr-6">
+          <a class="ml-10 text-2xl text-white font-bold" href="#">
+            <img class="h-7" src="./erapaypng.png" alt="" width="auto">
+          </a>
+        </div>
+        <div>
+          <ul>
+            <li class="mb-1 px-10"><a class="block pl-8 py-4 text-xl text-white hover:bg-gray-500 rounded-xl" href="#">Product</a></li>
+            <li class="mb-1 px-10"><a class="block pl-8 py-4 text-xl text-white hover:bg-gray-500 rounded-xl" href="#">Story</a></li>
+            <li class="mb-1 px-10"><a class="block pl-8 py-4 text-xl text-white hover:bg-gray-500 rounded-xl" href="#">Features</a></li>
+            <li class="mb-1 px-10"><a class="block pl-8 py-4 text-xl text-white hover:bg-gray-500 rounded-xl" href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="mt-auto px-10">
+          <div class="pt-6"><a class="block mb-4 py-4 px-12 text-white text-center font-bold hover:bg-white hover:text-gray-800 border border-gray-50 rounded-full transition duration-200" href="#">Sign in</a><a class="block py-4 px-12 text-white text-center font-bold bg-blue-500 hover:bg-blue-600 rounded-full transition duration-200" href="#">Sign up</a></div>
+          <p class="mt-6 mb-4 text-lg text-center text-white">
+            <span>2021 © Zospace. All rights reserved.</span>
+          </p>
+        </div>
+      </nav>
+    </div>
+  </section>
   <section class="relative pt-20 2xl:pt-40">
-    <div class="container px-4 mx-auto mb-16 md:mb-24">
-      <div class="text-center">
-        <h2 class="mb-8 text-6xl 2xl:text-7xl font-bold font-heading" style="font-family: arialBlack;">ERAPAY</h2>
+    <div class="container px-4 mx-auto md:mb-24 text-center">
+      <div class="text-center  mb-32 ">
+        <h2 class="mb-8 text-6xl 2xl:text-7xl font-bold font-heading">Open <div class="h-10" id="changeText"> </div>
+        </h2>
+        <p class="mb-2 text-xl">Prosessing crypto through walled gardens? We can change that.</p>
 
-        <div class="inline-block mb-8 text-2xl font-bold ">
-          <img class="h-7 shadow-2xl rounded" src="zospace-assets/logos/zospace-dark-logo.svg" alt="" width="auto">
-        </div>
-        <h2 class="mb-8 text-6xl 2xl:text-7xl font-bold font-heading">Open Source Payments for Crypto</h2>
-        <p class="mb-16 text-xl">Keeping crypto open, while allowing you to pull in the big bucks</p>
-        <a class="inline-block px-12 py-3 bg-yellow-brand hover:bg-black hover:text-white rounded-2xl text-lg font-bold text-black transition duration-200" href="#waitlist">Join the Waitlist</a>
+        <a class="inline-block px-12 py-3 bg-yellow-brand hover:bg-black hover:text-white rounded-2xl text-lg font-bold text-black transition duration-200" href="#">Get Started </a>
+      </div>
+
+    </div>
+  
+  </section>
+
+
+  <!-- <section class="pt-20 2xl:pt-40 bg-white-800 mt-20">
+    <div class="container px-4 pb-20 mx-auto">
+      <h2 class="lg:mb-32 text-5xl lg:text-6xl 2xl:text-7xl font-bold font-heading text-white text-center">Choose a plan</h2>
+      <div class="hidden lg:block max-w-6xl mx-auto">
+        <h4 class="inline-block mb-6 text-lg text-blue-400 font-bold">Pick what works for you</h4>
+        <p class="max-w-sm text-lg text-black leading-loose">
+          <span></span>
+          <span class="text-black font-medium"></span>
+        </p>
       </div>
     </div>
-    <div class="relative">
-      <div class="hidden lg:block absolute right-0 top-0 mt-24 w-1/2 h-px bg-gray-50"></div>
-      <div class="hidden lg:block absolute left-0 top-0 mt-40 w-1/2 h-px bg-gray-50"></div>
-      <img class="shadow-2xl rounded-2xl lg:relative lg:max-w-4xl mx-auto" src="shot02.png" alt=""/>
-    </div>
-  </section>
-  <section class="relative py-20 2xl:py-40 overflow-hidden">
-    <div class="absolute top-0 left-0 lg:bottom-0 h-full lg:h-auto w-full lg:w-8/12 bg-yellow-brand lg:overflow-hidden">
-    </div>
-    <div class="relative container px-4 mx-auto">
-      <div class="max-w-5xl mx-auto">
-        <div class="flex flex-wrap items-center -mx-4">
-          <div class="w-full lg:w-1/2 px-4 mb-16 lg:mb-0">
-            <div class="max-w-md">
-              <span class="text-lg text-blue-400 font-bold">Register Account</span>
-              <h2 class="mt-8 mb-12 text-5xl font-bold font-heading text-white">Start creating a new template by selecting UI components</h2>
-              <p class="text-lg text-gray-200">
-                <span>The brown fox jumps over</span>
-                <span class="text-white">the lazy dog.</span>
-              </p>
+    <div class="bg-yellow-brand pt-20 pb-20 2xl:pb-40">
+      <div class="container px-4 mx-auto">
+        <div class="max-w-6xl mx-auto">
+          <div class="flex flex-wrap -mx-2">
+            <div class="hidden lg:block w-full lg:w-1/3 px-2">
+              <ul class="text-xl">
+                <li class="mb-8">Transaction Cap</li>
+                <li class="mb-8">Analytics</li>
+                <li class="mb-8">Create Subscriptions</li>
+                <li class="mb-8">Commision</li>
+                <li class="mb-8">Checkouts</li>
+              </ul>
             </div>
-          </div>
-          <div class="w-full lg:w-1/2 px-4">
-            <div class="lg:max-w-lg mx-auto px-6 lg:px-20 py-3 lg:py-20 bg-white shadow-2xl rounded-lg">
-              <form action="#">
-                <h3 class="mb-10 text-2xl text-black font-bold font-heading">Get notified when we launch</h3>
-
-                  <div class="flex items-center pl-6 mb-3 bg-white rounded-full">
-                    <span class="inline-block pr-3 border-r border-gray-50">
-                      <svg class="w-5 h-5" width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.29593 0.492188C4.81333 0.492188 2.80078 2.50474 2.80078 4.98734C2.80078 7.46993 4.81333 9.48248 7.29593 9.48248C9.77851 9.48248 11.7911 7.46993 11.7911 4.98734C11.7911 2.50474 9.77851 0.492188 7.29593 0.492188ZM3.69981 4.98734C3.69981 3.00125 5.30985 1.39122 7.29593 1.39122C9.28198 1.39122 10.892 3.00125 10.892 4.98734C10.892 6.97342 9.28198 8.58346 7.29593 8.58346C5.30985 8.58346 3.69981 6.97342 3.69981 4.98734Z" fill="black"></path>
-                        <path d="M5.3126 10.3816C2.38448 10.3816 0.103516 13.0524 0.103516 16.2253V19.8214C0.103516 20.0696 0.304772 20.2709 0.55303 20.2709H14.0385C14.2867 20.2709 14.488 20.0696 14.488 19.8214C14.488 19.5732 14.2867 19.3719 14.0385 19.3719H1.00255V16.2253C1.00255 13.4399 2.98344 11.2806 5.3126 11.2806H9.27892C10.5443 11.2806 11.6956 11.9083 12.4939 12.9335C12.6465 13.1293 12.9289 13.1644 13.1248 13.0119C13.3207 12.8594 13.3558 12.5769 13.2033 12.381C12.2573 11.1664 10.8566 10.3816 9.27892 10.3816H5.3126Z" fill="black"></path>
-                        <rect x="15" y="15" width="5" height="1" rx="0.5" fill="black"></rect><rect x="17" y="18" width="5" height="1" rx="0.5" transform="rotate(-90 17 18)" fill="black"></rect>
-                      </svg>
-                    </span>
-   
-
-<!-- Begin Mailchimp Signup Form -->
-<link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
-<style type="text/css">
-	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
-	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
-	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-</style>
-<div id="mc_embed_signup">
-<form action="https://Icloud.us5.list-manage.com/subscribe/post?u=389ff1b7bfcbacf70f405c599&amp;id=77213463aa" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-    <div id="mc_embed_signup_scroll">
-	<h2>Subscribe</h2>
-<div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
-<div class="mc-field-group">
-	<label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
-</label>
-	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-</div>
-	<div id="mce-responses" class="clear">
-		<div class="response" id="mce-error-response" style="display:none"></div>
-		<div class="response" id="mce-success-response" style="display:none"></div>
-	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_389ff1b7bfcbacf70f405c599_77213463aa" tabindex="-1" value=""></div>
-    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-    </div>
-</form>
-</div>
-<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
-<!--End mc_embed_signup-->
-
-                      <!--End mc_embed_signup-->
+            <div class="w-full lg:w-1/3 px-2 mb-8 lg:mb-0">
+              <div class="px-8 py-10 lg:-mt-72 rounded-3xl bg-white text-center">
+                <div class="mb-14 pb-8 border-b border-gray-100">
+                  <h3 class="mb-12 text-3xl font-bold font-heading">Standard p/m</h3>
+                  <div class="flex justify-center">
+                    <span class="text-2xl font-bold text-blue-500">USDT</span>
+                    <p class="text-5xl font-bold text-blue-500">0</p>
                   </div>
-            
-
-              </form>
+                </div>
+                <ul class="mb-8">
+                  <li class="py-4 text-lg rounded-2xl bg-blue-50">10</li>
+                  <li class="py-4 text-lg">Limited</li>
+                  <li class="py-4 flex items-center justify-center text-lg rounded-2xl bg-blue-50">
+                    <span class="lg:hidden mr-2">Teams</span>
+                    <span>No</span>
+                  </li>
+                  <li class="py-4 flex items-center justify-center text-lg">
+                    <span class="lg:hidden mr-2"></span>
+                    <span>2%</span>
+                  </li>
+                  <li class="py-4 text-lg rounded-2xl bg-blue-50">2 Checkouts</li>
+                </ul>
+              </div>
+            </div>
+            <div class="w-full lg:w-1/3 px-2">
+              <div class="px-8 py-10 lg:-mt-72 rounded-3xl bg-white text-center">
+                <div class="mb-14 pb-8 border-b border-gray-100">
+                  <h3 class="mb-12 text-3xl font-bold font-heading">Premium p/m</h3>
+                  <div class="flex justify-center">
+                    <span class="text-2xl font-bold text-blue-500">USDT</span>
+                    <p class="text-5xl font-bold text-blue-500">10</p>
+                  </div>
+                </div>
+                <ul class="mb-8">
+                  <li class="py-4 text-lg rounded-2xl bg-blue-50">Unlimited</li>
+                  <li class="py-4 text-lg">Full range</li>
+                  <li class="py-4 flex items-center justify-center text-lg rounded-2xl bg-blue-50">
+              
+                    <span>Yes</span>
+                  </li>
+                  <li class="py-4 flex items-center justify-center text-lg">
+           
+                    <span>0%</span>
+                  </li>
+                  <li class="py-4 text-lg rounded-2xl bg-blue-50">Unlimited</li>
+                </ul>
+                <a class="inline-block px-12 py-2 bg-yellow-brand hover:bg-black hover:text-white rounded-2xl text-lg font-bold text-black transition duration-200" href="./src/#/mesh">Upgrade</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 </body>
 </html>
 

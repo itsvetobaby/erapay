@@ -94,7 +94,7 @@
   -o-animation: cycle 4s infinite; /* Opera 12+ */
   animation: cycle 4s infinite; /* IE 10+, Fx 29+ */
 }
-}
+
 @keyframes cycle {
 0% {
   content: "Corgi";

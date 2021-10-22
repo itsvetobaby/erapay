@@ -36,6 +36,12 @@ class Mesh extends View {
     State.local.get('cart').get(user).get(k).put(count);
   }
 
+  checkTransaction(){
+    var checktrans = State.public.user().get('transactionsData')
+    checktrans.map(v => console.log(v))
+    console.log("ee")
+  }
+
   renderUserMesh(user) {
     const chat = Session.channels[user];
     const uuid = chat && chat.uuid;
@@ -133,20 +139,14 @@ class Mesh extends View {
     
     })
 
-    var transactionsGun = Gun(['https://iris.cx/gun', 'https://gun-manhattan.herokuapp.com/gun'])
 
-
-    function check(){
-      const pub = "tUCnBoOeXEDdvic8fHRRm2i-8abZdwvd6OZDjoK48N0.e3BFQBIfncU6J0AByxnjO9XmuWxuIQ_nb0a37lf9st0"
-      transactionsGun.get(pub).get("transactions").map(v => {console.log(v.id)})
-    }
   
     var failedNumTotal = (failedNum.reduce((r,c) => r + parseFloat(c), 0))
     var totalNumTotal = (totalNum.reduce((r,c) => r + parseFloat(c), 0))
 
     var totalFailedPercent = (failedNumTotal/(totalNumTotal/100))
 
-    console.log(totalFailedPercent)
+
 
     
     $("#totalCarts").text(totalNumTotal)
@@ -156,53 +156,7 @@ class Mesh extends View {
     var name = $("#getName").val()
     return html`
 
-    <section class="py-10  bg-yellow-brand rounded-2xl shadow-xl overflow-hidden">
-      <div class="container px-4 mx-auto">
-        <div class="mb-10 max-w-xl mx-auto mb-24 text-center">
-          <h2 class="mt-12 text-5xl lg:text-6xl text-black font-bold font-heading">Build and launch without problems</h2>
-        </div>
- 
-        <div class="relative flex flex-wrap justify-center -mx-10 mb-20">
-          <img class="hidden lg:block absolute inset-y-0 -mr-80 -mt-16" src="zospace-assets/lines/dots-gray.svg" alt=""/>
-          <div class="w-full lg:w-1/3 px-10 mb-20 lg:mb-0">
-            <div class="relative flex">
-              <img class="hidden lg:block absolute top-0 right-0 -mr-20 -mt-16" src="zospace-assets/lines/dots-gray.svg" alt=""/>
-              <div class="mr-8">
-                <span class="flex justify-center items-center w-14 h-14 text-black bg-white text-lg font-bold rounded-2xl">1</span>
-              </div>
-              <div class="max-w-xs">
-                <h3 class="mb-6 text-lg font-bold font-heading text-black">Create a product</h3>
-                <p class="text-lg text-black">Enter a name and a price - Thats all. Wait for it to show up on the dash, click on it, then copy the ID.</p>
-              </div>
-            </div>
-          </div>
-          <div class="w-full lg:w-1/3 px-10 mb-20 lg:mb-0">
-            <div class="flex">
-              <div class="mr-8">
-                <span class="flex justify-center items-center w-14 h-14 text-black bg-white text-lg font-bold rounded-2xl">2</span>
-              </div>
-              <div class="max-w-xs">
-                <h3 class="mb-6 text-lg font-bold font-heading text-black">Build a Checkout</h3>
-                <p class="text-lg text-black">Pick a checkout <a href="#checkouts">here</a></p>
-              </div>
-            </div>
-          </div>
-          <div class="w-full lg:w-1/3 px-10 mb-20 lg:mb-0">
-            <div class="flex">
-              <div class="mr-8">
-                <span class="flex justify-center items-center w-14 h-14 text-black bg-white text-lg font-bold rounded-2xl">3</span>
-              </div>
-              <div class="max-w-xs">
-                <h3 class="mb-6 text-lg font-bold font-heading text-black">Customize tools</h3>
-                <p class="text-lg text-black">The brown me quam, sagittis porttitor lorem vel, commodo fringilla nisl.</p>
-              </div>
-            </div>
-          </div>
-          
-        </div>
- 
-      </div>
-    </section>
+
 
     <div class="flex flex-col">
       <br/><br/>
@@ -215,24 +169,140 @@ class Mesh extends View {
       </div>
 
       <br/>
-      
-          <div class="flex overflow-x-auto space-x-8 p-10">
-            <div class="w-96 p-4 shadow-2xl rounded-2xl bg-yellow-69  ">
-              <div class="p-6 rounded  " style="    width: 32em;">
-                <div class="flex mb-2">
-     
-                </div>
-                <h2 class="mb-2 text-3xl font-bold">Your Products</h2>
-                <div class="flex ">
 
-                    <button class="bg-green-500 text-gray-800  py-2 px-4 rounded inline-flex items-center" 
-                    onClick=${() => route(`/point/new`)}>
-                      <a style="color: white" href="/point/new" class="name"><i class="fas fa-plus"></i></a>
-                    </button>
-                  </div>
-                <span class="text-xs text-red-500">
-                 
-                </span>
+      <section class="py-6">
+        <div class="container px-4 mx-auto ">
+          <div class="flex flex-wrap -m-4">
+            <div class="w-full pb-8  shadow-2xl rounded-2xl w-4/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style="">ERAPAY</h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-gray-50 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>NEW</h2>
+              </div>
+              <div class="px-6 rounded bg-white my-2 flex">
+                <h3 class="text-lg text-gray-600" style="">Pick one of the boxes below to get started</h3>
+
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap -m-4 my-10">
+            <div class=" pb-8  shadow-2xl rounded-2xl w-1/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style=""></h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-gray-50 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>Request</h2>
+              </div>
+              <div class="px-6 rounded bg-white my-2 flex">
+                <h3 class="text-lg text-gray-600" style="">For one-time payments</h3>
+
+              </div>
+              
+            </div>
+            <div class=" pb-8  shadow-2xl rounded-2xl w-1/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style=""></h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-gray-50 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>Donation</h2>
+              </div>
+              <div class="px-6 rounded bg-white my-2 flex">
+                <h3 class="text-lg text-gray-600" style="">Used to create a reoccuring payment to a creator</h3>
+
+              </div>
+              
+            </div>
+            <div class=" pb-8  shadow-2xl rounded-2xl w-1/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style=""></h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-gray-50 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>Checkouts</h2>
+              </div>
+              <div class="px-6 rounded bg-white my-2 flex">
+                <h3 class="text-lg text-gray-600" style="">Delivery address', confirmation, payment, product deatils, all in one place</h3>
+
+              </div>
+              
+            </div>
+            <div class=" pb-8  shadow-2xl rounded-2xl w-1/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style=";"></h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-gray-50 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>Paid Downloads</h2>
+              </div>
+              <div class="px-6 rounded bg-white my-2 flex">
+                <h3 class="text-lg text-gray-600" style="">Give access to a file post payment</h3>
+
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      
+      <section class="py-6">
+        <div class="container px-4 mx-auto ">
+          <div class="flex flex-wrap -m-4">
+            <div class="w-full pb-8  shadow-2xl rounded-2xl md:w-1/2 lg:w-1/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style="font-family: arialBlack;">ERAPAY</h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-gray-50 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>NEW</h2>
+              </div>
+              <div class="p-6 rounded bg-white border border-gray my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <span>Payees</span>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <h2>Antony</h2>
+                    <h2>Manav</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-1/12 ">
+            
+                    <h2>></h2>
+              
+                </div>
+              </div>
+              <div class="p-6 rounded  bg-white border border-gray my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <span>Method</span>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <h2>Ethereum</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-1/12 ">
+            
+                    <h2>></h2>
+              
+                </div>
+              </div>
+              <div class="p-6 rounded bg-white border border-blue-300 my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <h2>Total</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-8/12 relative flex justify-between items-center">
+            
+                    <div>Ethereum</div>
+                    <div  class="mx-auto">2.000</div>
+
+                </div>
+      
               </div>
             </div>
 
@@ -241,35 +311,301 @@ class Mesh extends View {
               const i = this.state.items[k];
               return html`
               
-
-                <div  onClick=${() => route(`/point/${k}/${i.from}`)}>
-                  <div class="w-96 p-4 shadow-2xl rounded-2xl bg-yellow-69  ">
-                    <div class="p-6 rounded ">
-                      <div class="flex mb-2">
-                        <span class="inline-block mr-2">
-                          <img class="w-8" src="./assets/fa/svgs/solid/box-open.svg"></img>
-                        </span>
-                        <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-gray-50 rounded-full">Product</span>
-                      </div>
-                      <h2 class="mb-2 text-3xl font-bold">${i.name}</h2>
-                      <h2 class="mb-2 text-3xl font-bold">${i.id}</h2>
-
-                      <span class="text-xs text-red-500">
-                        <span class="inline-block mr-2">
-                          <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16.5 4.16667C16.3906 4.16661 16.2822 4.18812 16.181 4.22998C16.0799 4.27183 15.988 4.33322 15.9106 4.41061C15.8332 4.488 15.7719 4.57989 15.73 4.68103C15.6881 4.78216 15.6666 4.89055 15.6667 5V7.15495L10.4225 1.91084C10.3452 1.83344 10.2533 1.77204 10.1522 1.73015C10.0511 1.68825 9.94277 1.66669 9.83333 1.66669C9.7239 1.66669 9.61554 1.68825 9.51445 1.73015C9.41335 1.77204 9.3215 1.83344 9.24414 1.91084L6.50002 4.65495L2.08919 0.244171C1.93245 0.0902454 1.72127 0.00444584 1.50159 0.00544068C1.28191 0.00643553 1.07151 0.094144 0.91617 0.249483C0.760831 0.404822 0.673123 0.61522 0.672128 0.8349C0.671133 1.05458 0.756932 1.26576 0.910858 1.4225L5.91086 6.4225C5.98822 6.4999 6.08007 6.5613 6.18116 6.60319C6.28226 6.64508 6.39062 6.66665 6.50005 6.66665C6.60948 6.66665 6.71784 6.64508 6.81893 6.60319C6.92003 6.5613 7.01188 6.4999 7.08924 6.4225L9.83336 3.67839L14.4883 8.33334H12.3334C12.1123 8.33334 11.9004 8.42113 11.7441 8.57741C11.5878 8.7337 11.5 8.94566 11.5 9.16667C11.5 9.38768 11.5878 9.59965 11.7441 9.75593C11.9004 9.91221 12.1123 10 12.3334 10H16.5C16.6095 10.0001 16.7179 9.97855 16.819 9.9367C16.9201 9.89484 17.012 9.83346 17.0894 9.75607C17.1668 9.67867 17.2282 9.58678 17.2701 9.48565C17.3119 9.38452 17.3334 9.27612 17.3334 9.16667V5C17.3334 4.89055 17.3119 4.78216 17.2701 4.68103C17.2282 4.57989 17.1668 4.488 17.0894 4.41061C17.012 4.33322 16.9201 4.27183 16.819 4.22998C16.7179 4.18812 16.6095 4.16661 16.5 4.16667Z" fill="#E85444"></path>
-                          </svg>
-                        </span>
-                      </span>
-                    </div>
+              <div class="w-full pb-8  shadow-2xl rounded-2xl md:w-1/2 lg:w-1/4 p-4  mr-6">
+                <div class="p-6 rounded bg-white">
+                  <div class="flex mb-2">
+                    <div class="text-lg text-gray-600" style="font-family: arialBlack;"><img class="w-8 h-8" src="./assets/fa/svgs/solid/box-open.svg"/></div>
+                    <span class="inline-block ml-auto px-10 py-2 text-xs text-gray-500 bg-gray-50 border border-blue-300 rounded-full">Product</span>
                   </div>
+                  <h2 class="mb-2 text-3xl font-bold"  onClick=${() => route(`/point/${k}/${i.from}`)} >${i.name}</h2>
                 </div>
-
+                  <div class="p-6 rounded bg-white border border-gray my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <span>ID</span>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 ">
+                  
+                          <h2>${i.id}</h2>
+                          <h2>Manav</h2>
+                      </div>
+   
+                  </div>
+                  <div class="p-6 rounded  bg-white border border-gray my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <span>Method</span>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 ">
+                  
+                          <h2>Ethereum</h2>
+                      </div>
+    
+                  </div>
+                  <div class="p-6 rounded bg-white border border-blue-300 my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <h2>Total</h2>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 relative flex justify-between items-center">
+                
+                        <div>Ethereum</div>
+                        <div  class="mx-auto">2.000</div>
+      
+                      </div>
+ 
+                  </div>
+              </div>
               `
               }
             )}
           </div>
-  
+        </div>
+      </section>
+
+      <br/><br/>
+      <h1 class="text-3xl font-black leading-9 font-medium text-black" id="checkouts">Reoccuring payments</h1>
+      <br/>
+
+      <section class="py-6">
+        <div class="container px-4 mx-auto ">
+          <div class="flex flex-wrap -m-4">
+            <div class="w-full pb-8  shadow-2xl rounded-2xl md:w-1/2 lg:w-1/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style="font-family: arialBlack;">ERAPAY</h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-green-400 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>NEW</h2>
+              </div>
+              <div class="p-6 rounded bg-white border border-gray my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <span>Payees</span>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <h2>Antony</h2>
+                    <h2>Manav</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-1/12 ">
+            
+                    <h2>></h2>
+              
+                </div>
+              </div>
+              <div class="p-6 rounded  bg-white border border-gray my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <span>Method</span>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <h2>Ethereum</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-1/12 ">
+            
+                    <h2>></h2>
+              
+                </div>
+              </div>
+              <div class="p-6 rounded bg-white border border-blue-300 my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <h2>Total</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <span>Ethereum</span> <span  class="mx-auto">-</span> <span  class="mx-auto">2.000</span><br/>
+                    <span>USD</span> <span  class="mx-auto">-</span> <span class="mx-auto">5023</span>
+
+                </div>
+                <div class="text-xs text-blue-500 w-1/12 ">
+            
+                    <h2>></h2>
+              
+                </div>
+              </div>
+            </div>
+
+            ${!keys.length ? html`<p>Click the green plus to get started</p>`:''}
+              ${keys.map(k => {
+              const i = this.state.items[k];
+              return html`
+              
+              <div class="w-full pb-8  shadow-2xl bg-yellow-brand rounded-2xl md:w-1/2 lg:w-1/4 p-2  mr-6">
+                <div class="p-6 rounded ">
+                  <div class="flex mb-2">
+                    <div class="text-lg text-gray-600" style="font-family: arialBlack;"><img class="w-8 h-8" src="./assets/fa/svgs/solid/box-open.svg"/></div>
+                    <span class="shadow-xl inline-block ml-auto px-10 py-2 text-xs text-gray-500 bg-gray-200 rounded-full">Product</span>
+                  </div>
+                  <h2 class="mb-2 text-3xl font-bold"  onClick=${() => route(`/point/${k}/${i.from}`)} >${i.name}</h2>
+                </div>
+                  <div class="px-6 py-1 rounded  my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <span>ID</span>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 ">
+                          <h2>${i.id}</h2>
+                      </div>
+   
+                  </div>
+                  <div class="px-6 py-1 rounded  my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <span>Method</span>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 ">
+                  
+                          <h2>Metamask</h2>
+                      </div>
+    
+                  </div>
+                  <div class="px-6 py-1 rounded  my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <h2>Total</h2>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 relative flex justify-between items-center">
+            
+                          <div>Ethereum</div>
+                          <div  class="mx-auto">2.000</div>
+      
+                      </div>
+                      
+ 
+                  </div><br/>
+                  <span class="inline-block shadow-xl   h-10 w-10 p-4 py-2 px-4 mx-6 text-md text-white bg-green-400  rounded-full">C</span>
+                  <span class="inline-block shadow-xl  h-10 w-10 p-4 py-2 px-4 mx-6 text-md text-white bg-green-400  rounded-full">C</span>
+                  <span class="inline-block  shadow-xl h-10 w-10 p-4 py-2 px-4 mx-6 text-md text-white bg-green-400  rounded-full">C</span>
+
+              </div>
+              `
+              }
+            )}
+          </div>
+        </div>
+      </section>
+
+      <br/><br/>
+      <h1 class="text-3xl font-black leading-9 font-medium text-black" id="checkouts">Transaction history</h1>
+      <br/>
+
+      <section class="py-6">
+        <div class="container px-4 mx-auto ">
+          <div class="flex flex-wrap -m-4">
+            <div class="w-full pb-8  shadow-2xl rounded-2xl md:w-1/2 lg:w-1/4 p-4 mr-6">
+              <div class="p-6 rounded bg-white">
+                <div class="flex mb-2">
+                  <h3 class="text-lg text-gray-600" style="font-family: arialBlack;">ERAPAY</h3>
+                  <span class="inline-block ml-auto px-2 py-1 text-xs text-gray-500 bg-green-400 border border-blue-300 rounded-full">Cube Introduction</span>
+                </div>
+                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>NEW</h2>
+              </div>
+              <div class="p-6 rounded bg-white border border-gray my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <span>Payees</span>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <h2>Antony</h2>
+                    <h2>Manav</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-1/12 ">
+            
+                    <h2>></h2>
+              
+                </div>
+              </div>
+              <div class="p-6 rounded  bg-white border border-gray my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <span>Method</span>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <h2>Ethereum</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-1/12 ">
+            
+                    <h2>></h2>
+              
+                </div>
+              </div>
+              <div class="p-6 rounded bg-white border border-blue-300 my-2 flex">
+                <div class="text-xs text-gray-500 w-4/12 ">
+            
+                    <h2>Total</h2>
+                </div>
+                <div class="text-xs text-blue-500 w-7/12 ">
+            
+                    <span>Ethereum</span> <span  class="mx-auto">-</span> <span  class="mx-auto">2.000</span><br/>
+                    <span>USD</span> <span  class="mx-auto">-</span> <span class="mx-auto">5023</span>
+
+                </div>
+                
+              </div>
+            </div>
+
+            ${!keys.length ? html`<p>Click the green plus to get started</p>`:''}
+              ${keys.map(k => {
+              const i = this.state.items[k];
+              return html`
+              
+              <div class="w-full pb-8  shadow-2xl rounded-2xl md:w-1/2 lg:w-1/4 p-4  mr-6">
+                <div class="p-6 rounded bg-white">
+                  <div class="flex mb-2">
+                    <div class="text-lg text-gray-600" style="font-family: arialBlack;"><img class="w-8 h-8" src="./assets/fa/svgs/solid/box-open.svg"/></div>
+                    <span class="inline-block ml-auto px-10 py-2 text-xs text-gray-500 bg-gray-200 border border-blue-300 rounded-full">Product</span>
+                  </div>
+                  <h2 class="mb-2 text-3xl font-bold"  onClick=${() => route(`/point/${k}/${i.from}`)} >${i.name}</h2>
+                </div>
+                  <div class="p-6 rounded bg-white border border-gray my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <span>ID</span>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 ">
+                  
+                          <h2>${i.id}</h2>
+                          <h2>Manav</h2>
+                      </div>
+   
+                  </div>
+                  <div class="p-6 rounded  bg-white border border-gray my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <span>Method</span>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 ">
+                  
+                          <h2>Ethereum</h2>
+                      </div>
+    
+                  </div>
+                  <div class="p-6 rounded bg-white border border-blue-300 my-2 flex">
+                      <div class="text-xs text-gray-500 w-4/12 ">
+                  
+                          <h2>Total</h2>
+                      </div>
+                      <div class="text-xs text-blue-500 w-8/12 ">
+                  
+                          <span>Ethereum</span> <span  class="mx-auto">-</span> <span  class="mx-auto">2.000</span><br/>
+                          <span>USD</span> <span  class="mx-auto">-</span> <span class="mx-auto">5023</span>
+
+                      </div>
+ 
+                  </div>
+                  
+              </div>
+              `
+              }
+            )}
+          </div>
+        </div>
+      </section>
 
 
 
@@ -319,6 +655,7 @@ class Mesh extends View {
       
       <br/><br/>
 
+
       <section class="py-8">
       <div class="container px-4 mx-auto">
         <div class="flex flex-wrap -m-4">
@@ -327,6 +664,7 @@ class Mesh extends View {
               <div class="flex mb-3 items-center justify-between">
                 <h3 class="text-gray-500">Logins are done with keys. To Access your dashboard on another browser or device you will need your key.</h3>
                 <button class="focus:outline-none">
+                <button   onClick=${(e) => this.checkTransaction(e)}>check</button>
 
                 </button>
               </div>
@@ -471,13 +809,13 @@ class Mesh extends View {
                   return html`
                     <tr class="text-xs bg-gray-50">
                       <td class="flex items-center py-5 px-6 font-medium">
-                        <p>${i.id}</p>
+                        <p>${i.time}</p>
                       </td>
                       <td class="font-medium">${i.name}</td>
                       <td>
                         <span class="inline-block py-1 px-2 text-black ${backgroundCol} rounded-full">${i.status}</span>
                       </td>
-                      <td>${i.price}</td>
+                      <td>${i.id}</td>
                     </tr>
                   `
                 })}
@@ -588,6 +926,8 @@ class Mesh extends View {
     this.setState({items: this.items});
   }
 
+  
+
   getPointsFromUser(user) {
     State.public.user(user).get('mesh').get('points').map().on((...args) => {
       return this.onPoint(...args, user);
@@ -622,11 +962,11 @@ class Mesh extends View {
     this.setState({followedUserCount: 0, followerCount: 0, name: '', photo: '', about: '', totalPrice: 0, items: {}, cart: {}});
 
     const pub = Session.getPubKey();
-    var transactionsGun = Gun(['https://gun-manhattan.herokuapp.com/gun', ''])
+
 
 
     if (pub) {
-      transactionsGun.get(pub).get("transactions").map().on((p, id) => {
+      State.public.user().get('transactionsData').map().on((p, id) => {
         if (p) {
           const o = {};
           o[id] = p;

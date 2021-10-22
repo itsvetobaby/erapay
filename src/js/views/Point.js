@@ -31,7 +31,8 @@ class Point extends MeshView {
     sendEth(){
       // paymentAddress is where funds will be send to
       const paymentAddress = '0x192c96bfee59158441f26101b2db1af3b07feb40'
-      const amountEth = 0.021
+      const amountEth = 0.0021
+
 
       web3.eth.sendTransaction({
         to: paymentAddress,
@@ -40,9 +41,30 @@ class Point extends MeshView {
         if  (err) {
           console.log('Payment failed', err)
           $('#status').html('Payment failed')
+
+          var transactionData = {
+            status: "Failed",
+            time: new Date().format('m-d-Y h:i:s'),
+            name: this.props.point,
+            id: Math.floor(Math.random() * 1000000000)
+          };
+
+          State.public.user().get('mesh').get('points').get(this.props.point).get('transactions').put(transactionData);
+          State.public.user().get('transactionsData').get(transactionData.id).put(transactionData);
         } else {
           console.log('Payment successful', transactionId)
           $('#status').html('Payment successful')
+
+          var transactionData = {
+            status: "Successful",
+            time: new Date().format('m-d-Y h:i:s'),
+            name: this.props.point,
+            id: Math.floor(Math.random() * 1000000000)
+          };
+          console.log(transactionData.id)
+
+          State.public.user().get('mesh').get('points').get(this.props.point).get('transactions').put(transactionData);
+          State.public.user().get('transactionsData').get(transactionData.id).put(transactionData);
         }
       })
       
@@ -243,8 +265,10 @@ class Point extends MeshView {
             </div>
           </div>
         </section>
-        <section class="relative py-20 overflow-x-hidden  shadow-xl rounded-2xl">
+        <section class="relative py-20 overflow-x-hidden  shadow-xl border border-gray rounded-2xl">
           <div class="relative container mx-auto px-8">
+            <span class="flex"><span><div class="h-20 w-20 -ml-3"><img src="./assets/erapaypng.png"/></div></span> <span><h2 class="mb-14 text-7xl font-bold font-heading" style="font-family: arialBlack">ERAPAY</h2></span></span>
+
             <h2 class="mb-14 text-5xl font-bold font-heading">Checkout</h2>
             <div class="flex flex-wrap -mx-4">
               <div class="w-full lg:w-1/2 px-4">
@@ -337,7 +361,7 @@ class Point extends MeshView {
             </div>
           </div>
           <div class="lg:absolute lg:top-0 lg:right-0 w-full lg:w-2/5 mb-12 lg:mb-0">
-            <div class="py-16 px-6 md:px-14 bg-yellow-brand">
+            <div class="py-16 px-6 md:px-14 shadow-2xl border border-gray rounded-2xl">
               <div class="flex mb-12 items-center">
                 <h2 class="text-4xl font-bold font-heading">Order summary</h2>
               </div>
@@ -466,7 +490,7 @@ class Point extends MeshView {
 
       
 
-    
+
     MeshView.prototype.componentDidMount.call(this);
     const pub = this.props.mesh;
     this.eventListeners.forEach(e => e.off());

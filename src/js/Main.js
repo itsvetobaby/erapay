@@ -17,6 +17,8 @@ import Chat from './views/Chat.js';
 import Mesh from './views/Mesh.js';
 import Checkout from './views/Checkout.js';
 import Point from './views/Point.js';
+import Upgrade from './views/Upgrade.js';
+
 import Login from './views/Login.js';
 import Profile from './views/Profile.js';
 import Group from './views/Group.js';
@@ -204,6 +206,9 @@ class Main extends Component {
             <${Group} path="/group/:id?"/>
 
             <${Mesh} path="/mesh/:mesh?"/>
+
+            <${Upgrade} path="/upgrade"/>
+
 
             <${Point} path="/point/:point/:mesh"/>
             <${Point} path="/point/new" mesh=Session.getPubKey()/>
