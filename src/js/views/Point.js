@@ -30,10 +30,25 @@ class Point extends MeshView {
 
     sendEth(){
       // paymentAddress is where funds will be send to
-      const paymentAddress = '0x192c96bfee59158441f26101b2db1af3b07feb40'
-      const amountEth = 0.0021
+      var amountEth = " "
+      var paymentAddress = ''
+      //Clean
+      var getEthAmnt = State.public.user().get('mesh').get('points').get(this.props.point)
+      var getdata = State.public.user().get('profile').get('wallet')
 
+      
+      getdata.on(v => {
+        console.log(v)
+        paymentAddress = v
+        return paymentAddress
+      })
 
+      getEthAmnt.on(v => {
+        amountEth =  v.price
+        return amountEth
+      })
+
+           
       web3.eth.sendTransaction({
         to: paymentAddress,
         value: web3.toWei(amountEth, 'ether')
@@ -46,7 +61,9 @@ class Point extends MeshView {
             status: "Failed",
             time: new Date().format('m-d-Y h:i:s'),
             name: this.props.point,
-            id: Math.floor(Math.random() * 1000000000)
+            id: Math.floor(Math.random() * 1000000000),
+            type: "Donation",
+            price: $("#giveAmount").val()
           };
 
           State.public.user().get('mesh').get('points').get(this.props.point).get('transactions').put(transactionData);
@@ -59,7 +76,9 @@ class Point extends MeshView {
             status: "Successful",
             time: new Date().format('m-d-Y h:i:s'),
             name: this.props.point,
-            id: Math.floor(Math.random() * 1000000000)
+            id: Math.floor(Math.random() * 1000000000),
+            type: "Donation",
+            price: $("#giveAmount").val()
           };
           console.log(transactionData.id)
 
@@ -70,94 +89,36 @@ class Point extends MeshView {
       
     }
 
-    confirmDetails(){
-      var inputDeliveryNameF = $("#inputDeliveryNameF").val()
-      var inputDeliveryNameL = $("#inputDeliveryNameL").val()
-      var deliveryEmail = $("#inputDeliveryEmail").val()
-      var inputDeliveryAddress = $("#inputDeliveryAddress").val()
-      var inputDeliveryAppart = $("#inputDeliveryAppart").val()
-      var inputDeliveryRegion = $("#inputDeliveryRegion").val()
-      var inputDeliveryCity = $("#inputDeliveryCity").val()
-      var inputDeliveryZip = $("#inputDeliveryZip").val()
- 
-      var details = {
-        first_name: inputDeliveryNameF,
-        last_name: inputDeliveryNameL,
-        full_name: inputDeliveryNameF + " " + inputDeliveryNameL,
-        email: deliveryEmail,
-        address: inputDeliveryAddress,
-        appartement:inputDeliveryAppart,
-        region:inputDeliveryRegion,
-        city: inputDeliveryCity,
-        zip: inputDeliveryZip,
-
-
-      }
-
-      console.log(details)
-      document.getElementById("deliveryName").innerHTML = details.full_name
-      document.getElementById("deliveryEmail").innerHTML = details.email
-      document.getElementById("deliveryAddress").innerHTML = details.address
-      document.getElementById("deliveryAppart").innerHTML = details.appartement
-      document.getElementById("deliveryRegion").innerHTML = details.region
-      document.getElementById("deliveryCity").innerHTML = details.city
-      document.getElementById("deliveryZip").innerHTML = details.zip
-
-
-    }
+   
 
 
   newPoint() {
     console.log('new');
     return html`
       <div class="" id="profile">
-        <section class="py-8">
-          <div class="container px-4 mx-auto ">
-            <div class="flex flex-wrap -m-4">
-              <div class="w-full lg:w-3/3 p-4">
-                <div class="p-4 bg-yellow-69 shadow-xl rounded">
-                  <div class="relative h-40 w-full mb-4">
-                    <span class="absolute top-0 right-0 py-1 px-2 mt-2 mr-2 bg-indigo-500 rounded text-xs text-white">14 Tasks</span>
+        <section class="py-3 rounded-xl shadow-2xl">
+          <div class="container mx-auto px-4">
+              <div class="px-4 py-2 md:py-28 lg:px-20 bg-white">
+              <h2 class="mb-8 text-5xl font-bold font-heading">Create a new Checkout</h2>
+              <p class="mb-16 text-gray-500">Donations amounts are decided by donators, all they need to do is visit this URL. </p>
+              <div class="flex flex-wrap mb-8 pb-4 border-b">
+                  <div class="mr-10 w-3/4">
+                      <h3 class="text-gray-600">Product Name</h3>
+                      <p class="text-blue-300 font-bold font-heading">
+                        <h2 contenteditable placeholder="Product name" onInput=${e => this.newPointName = e.target.innerText} />
+                      </p>
                   </div>
-                  <div class="flex mb-6 justify-between items-center">
-                    <div>
-                      <h3 class="text-sm font-medium">Shuffle - an online editor</h3>
-                      <span class="text-xs text-gray-500">Production company</span>
-                    </div>
-                    <button class="ml-auto p-2 bg-indigo-50 rounded">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.99984 9.33335C8.73622 9.33335 9.33317 8.7364 9.33317 8.00002C9.33317 7.26364 8.73622 6.66669 7.99984 6.66669C7.26346 6.66669 6.6665 7.26364 6.6665 8.00002C6.6665 8.7364 7.26346 9.33335 7.99984 9.33335Z" fill="#382CDD"></path>
-                        <path d="M3.33333 9.33335C4.06971 9.33335 4.66667 8.7364 4.66667 8.00002C4.66667 7.26364 4.06971 6.66669 3.33333 6.66669C2.59695 6.66669 2 7.26364 2 8.00002C2 8.7364 2.59695 9.33335 3.33333 9.33335Z" fill="#382CDD"></path>
-                        <path d="M12.6668 9.33335C13.4032 9.33335 14.0002 8.7364 14.0002 8.00002C14.0002 7.26364 13.4032 6.66669 12.6668 6.66669C11.9304 6.66669 11.3335 7.26364 11.3335 8.00002C11.3335 8.7364 11.9304 9.33335 12.6668 9.33335Z" fill="#382CDD"></path>
-                      </svg>
-                    </button>
-                  </div>
-                  <div class="flex mb-2 justify-between items-center">
-                    <h4 class="text-xs font-medium">Start</h4>
-                    <span class="py-1 px-2 rounded-md px-10 bg-green-50 text-xl text-green-500">
-                      <h2 contenteditable placeholder="Product name" onInput=${e => this.newPointName = e.target.innerText} />
-                    </span>
-                  </div>
-                  <div class="flex mb-2 justify-between items-center">
-                    <h4 class="text-xs font-medium">Final Date</h4>
-                    <span class="py-1 px-2 rounded-md px-10 bg-green-50 text-xl text-red-500">
+              </div> 
+              <div class="flex flex-wrap mb-8 pb-4 border-b">
+                  <div class="mr-10 w-3/4">
+                    <h3 class="text-gray-600">Product Name</h3>
+                    <p class="text-blue-300 font-bold font-heading">
                       <input type="number" class="bg-green-50" placeholder="Price" onInput=${e => this.newPointPrice = parseInt(e.target.value)}/>
-                    </span>
+                    </p>
                   </div>
-                  <div class="flex mb-5 justify-between items-center">
-                    <h4 class="text-xs font-medium">Last Change</h4>
-                    <span class="text-xs text-indigo-500 font-medium">6 days ago</span>
-                  </div>
-                  <div class="flex items-ceenter justify-between border-t border-gray-50 pt-4">
-                    <div class="flex">
-                      <div class="flex items-center justify-center w-8 h-8 -ml-2 rounded-full bg-indigo-50 text-xs text-indigo-500">+3</div>
-                    </div>
-                    <a class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded-md text-xs text-white transition duration-200" href="#">
-                      <button class="text-gray-800  py-2 px-4 rounded inline-flex items-center" onClick=${e => this.addItemClicked(e)}>Add Product</button>
-                    </a>
-                  </div>
-                </div>
-              </div>
+              </div>   
+              <button class="text-gray-800  py-2 px-4 rounded inline-flex items-center" onClick=${e => this.addItemClicked(e)}>Create Checkout</button>
+
             </div>
           </div>
         </section>
@@ -229,7 +190,7 @@ class Point extends MeshView {
               </div>
               <div class="flex flex-wrap -mx-4 mb-8">
                 <div class="w-full lg:w-1/6 px-4 mb-8 lg:mb-0">
-                  <div class="flex items-center justify-center h-72 ">
+                  <div class="flex items-center justify-center bg-red-100 h-72 ">
                   <iris-img class="rounded" style="  padding: 0px;" user=${this.props.mesh} path="mesh/points/${this.props.point}/photo"/>
                   </div>
                 </div>
@@ -375,13 +336,10 @@ class Point extends MeshView {
                         </h3>
                         <p class="mb-8 text-gray-500"> <iris-text contenteditable="false" placeholder="Description" user=${this.props.mesh} path="mesh/points/${this.props.point}/description"/></p>
                       </div>
-                      <span class="text-lg text-blue-300 font-bold font-heading">                    <iris-text contenteditable="false" placeholder="Price" user=${this.props.mesh} path="mesh/points/${this.props.point}/price"/>
+                      <span class="text-lg text-blue-300 font-bold font-heading">                    <iris-text id="giveAmount" contenteditable="false" placeholder="Price" user=${this.props.mesh} path="mesh/points/${this.props.point}/price"/>
                       </span>
                     </div>
-                    <div class="flex items-center justify-between">
-                      <p class="text-gray-500">In Stock</p>
-                      
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -393,19 +351,13 @@ class Point extends MeshView {
                       <span class="font-bold font-heading"><iris-text contenteditable="true" placeholder="Price" user=${this.props.mesh} path="mesh/points/${this.props.point}/price"/></span>
                     </div>
                   </div>
-                  <div class="py-3 px-10 rounded-xl">
-                    <div class="flex justify-between">
-                      <span class="font-medium">Shipping</span>
-                      <span class="font-bold font-heading">0</span>
-                    </div>
-                  </div>
-                  <div class="py-3 px-10 bg-blue-50 rounded-xl">
+                  <div class="py-3 px-10  rounded-xl">
                     <div class="flex justify-between">
                       <span class="font-medium">Tax</span>
                       <span class="font-bold font-heading">0</span>
                     </div>
                   </div>
-                  <div class="py-3 px-10 rounded-xl">
+                  <div class="py-3 px-10 bg-blue-50 rounded-xl">
                     <div class="flex justify-between">
                       <span class="text-base md:text-xl font-bold font-heading">Total</span>
                       <span class="font-bold font-heading"><iris-text contenteditable="true" placeholder="Price" user=${this.props.mesh} path="mesh/points/${this.props.point}/price"/></span>
@@ -455,7 +407,8 @@ class Point extends MeshView {
       name: this.newPointName,
 
       price: this.newPointPrice,
-      id: rand_int
+      id: rand_int,
+      type: "Donation"
     };
     console.log(point)
     State.public.user().get('mesh').get('points').get(rand_int).put(point);

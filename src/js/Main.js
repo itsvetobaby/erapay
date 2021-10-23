@@ -16,7 +16,10 @@ import LogoutConfirmation from './views/LogoutConfirmation.js';
 import Chat from './views/Chat.js';
 import Mesh from './views/Mesh.js';
 import Checkout from './views/Checkout.js';
+
 import Point from './views/Point.js';
+import Donation from './views/Donation.js';
+
 import Upgrade from './views/Upgrade.js';
 
 import Login from './views/Login.js';
@@ -212,6 +215,9 @@ class Main extends Component {
 
             <${Point} path="/point/:point/:mesh"/>
             <${Point} path="/point/new" mesh=Session.getPubKey()/>
+
+            <${Donation} path="/donation/:donation/:mesh"/>
+            <${Donation} path="/donation/new" mesh=Session.getPubKey()/>
 
             <${Checkout} path="/checkout/:point/:mesh"/>
             <${Checkout} path="/checkout/new" mesh=Session.getPubKey()/>
