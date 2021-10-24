@@ -30,24 +30,27 @@ class Point extends MeshView {
 
     sendEth(){
       // paymentAddress is where funds will be send to
-      var amountEth = " "
-      var paymentAddress = ''
+      var  amountEth = " "
+      var  paymentAddress = " "
+
+
+      
       //Clean
       var getEthAmnt = State.public.user().get('mesh').get('points').get(this.props.point)
       var getdata = State.public.user().get('profile').get('wallet')
 
       
       getdata.on(v => {
-        console.log(v)
-        paymentAddress = v
+        paymentAddress =  v
+        console.log(paymentAddress)
         return paymentAddress
       })
 
       getEthAmnt.on(v => {
         amountEth =  v.price
+        console.log(amountEth)
         return amountEth
       })
-
            
       web3.eth.sendTransaction({
         to: paymentAddress,
