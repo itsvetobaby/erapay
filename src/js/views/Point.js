@@ -65,7 +65,7 @@ class Point extends MeshView {
             time: new Date().format('m-d-Y h:i:s'),
             name: this.props.point,
             id: Math.floor(Math.random() * 1000000000),
-            type: "Donation",
+            type: "Checkout",
             price: $("#giveAmount").val()
           };
 
@@ -74,13 +74,14 @@ class Point extends MeshView {
         } else {
           console.log('Payment successful', transactionId)
           $('#status').html('Payment successful')
+          console.log("gogogogogo")
 
           var transactionData = {
             status: "Successful",
             time: new Date().format('m-d-Y h:i:s'),
             name: this.props.point,
             id: Math.floor(Math.random() * 1000000000),
-            type: "Donation",
+            type: "Checkout",
             price: $("#giveAmount").val()
           };
           console.log(transactionData.id)
@@ -375,7 +376,7 @@ class Point extends MeshView {
                   <a class="inline-block mb-4 md:mb-0 px-8 py-4 text-white font-bold font-heading uppercase bg-gray-800 hover:bg-gray-700 rounded-md" href="#">Apply</a>
                 </div>
               </div>
-              <button onClick=${(e) => {this.sendEth(e)}} class="w-full bg-green-500 text-white pay-button rounded-md   text-2xl  py-2 px-4  font-heading">Pay</button>
+              <button onClick=${(e) => {this.sendEth(e)}} class="w-full bg-yellow-600 text-white pay-button rounded-md   text-2xl  py-2 px-4  font-heading"><img class="mx-auto w-6 h-6" src="./assets/metamask.png"/></button>
               <div id="status"></div>
             </div>
           </div>

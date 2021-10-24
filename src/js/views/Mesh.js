@@ -1,5 +1,3 @@
-
-
 import { html } from '../Helpers.js';
 import {translate as t} from '../Translation.js';
 import State from '../State.js';

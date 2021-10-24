@@ -28,58 +28,64 @@ class Donation extends MeshView {
 
 
 
-    sendEth(){
-      // paymentAddress is where funds will be send to
-      const paymentAddress = '0x192c96bfee59158441f26101b2db1af3b07feb40'
-      const amountEth = $("#giveAmount").val()
 
-
-      web3.eth.sendTransaction({
-        to: paymentAddress,
-        value: web3.toWei(amountEth, 'ether')
-      }, (err, transactionId) => {
-        if  (err) {
-          console.log('Payment failed', err)
-          $('#status').html('Payment failed')
-
-          var transactionData = {
-            status: "Failed",
-            time: new Date().format('m-d-Y h:i:s'),
-            name: $("#getName").val(),
-            id: Math.floor(Math.random() * 1000000000),
-            type: "Donation",
-            price: $("#giveAmount").val()
-          };
-          State.public.user().get('transactionsData').get(transactionData.id).put(transactionData);
-        } else {
-          console.log('Payment successful', transactionId)
-          $('#status').html('Payment successful')
-
-          var transactionData = {
-            status: "Successful",
-            time: new Date().format('m-d-Y h:i:s'),
-            name: this.props.donation,
-            id: Math.floor(Math.random() * 1000000000),
-            type: "Donation",
-            price: $("#giveAmount").val()
-
-
-          };
-          console.log(transactionData.id)
-
-          State.public.user().get('mesh').get('donations').get(this.props.donation).get('transactions').put(transactionData);
-          State.public.user().get('transactionsData').get(transactionData.id).put(transactionData);
-        }
-      })
-      
-    }
-
+  sendEth(){
+    //done differently to sendEth point.js. Issues with metamask fireing before gun returned wallet (fix this and then code can then be cleaned).  so promise is made to wait on getTransInfo() to return gun info before deliverInfo() fires
     
+    var  amountEth = $("#giveAmount").val()
+    getTransInfo()
+    deliverInfo()
+    // paymentAddress is where funds will be send to
+    
+    async function deliverInfo() {
+        const walletAddy = await getTransInfo();     
+    web3.eth.sendTransaction({
+      to: walletAddy,
+      value: web3.toWei(amountEth, 'ether')
+    }, (err, transactionId) => {
+        //this promts and err POST transaction which is curious, fix
+      if  (err) {
+        console.log('Payment failed', err)
+        $('#status').html('Payment failed')
+
+        var transactionData = {
+          status: "Failed",
+          time: new Date().format('m-d-Y h:i:s'),
+          name: this.props.donation,
+          id: Math.floor(Math.random() * 1000000000),
+          type: "Donation",
+          price: $("#giveAmount").val()
+        };
+
+        State.public.user().get('mesh').get('donations').get(this.props.donation).get('transactions').put(transactionData);
+        State.public.user().get('transactionsData').get(transactionData.id).put(transactionData);
+      } else {
+        console.log('Payment successful', transactionId)
+        $('#status').html('Payment successful')
+
+        var transactionData = {
+          status: "Successful",
+          time: new Date().format('m-d-Y h:i:s'),
+          name: this.props.donation,
+          id: Math.floor(Math.random() * 1000000000),
+          type: "Donation",
+          price: $("#giveAmount").val()
+        };
+        console.log(transactionData.id)
+
+        State.public.user().get('mesh').get('donations').get(this.props.donation).get('transactions').put(transactionData);
+        State.public.user().get('transactionsData').get(transactionData.id).put(transactionData);
+      }
+    })
+
+    }
+    
+  }
 
     onClickDelete() {
         if (confirm('Delete point? This cannot be undone.')) {
-          State.public.user().get('mesh').get('points').get(this.props.point).put(null);
-          route('/mesh/' + this.props.mesh);
+          State.public.user().get('mesh').get('donations').get(this.props.donation).put(null);
+          route('/mesh/');
         }
       }
 
@@ -270,5 +276,26 @@ class Donation extends MeshView {
     
   }
 }
+
+//needs to be outside class to work? fix?
+function getTransInfo() {
+    return new Promise(resolve => {
+
+    var  paymentAddress = " "
+
+
+    
+    //Clean
+    var getdata = State.public.user().get('profile').get('wallet')
+
+    
+    getdata.on(v => {
+    paymentAddress =  v
+    console.log(paymentAddress)
+    resolve(paymentAddress) 
+    })
+    });
+    }
+
 
 export default Donation;
