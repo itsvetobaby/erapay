@@ -52,7 +52,7 @@ class Main extends Component {
     if (this.state.loggedIn || window.location.pathname.length <= 2) {
       content = this.state.loggedIn ? html`
         <section class="main" style="flex-direction: row;">
-          <div class="">
+          <div class="view-area">
             <${Router} history=${createHashHistory()} onChange=${e => this.handleRoute(e)}>
               <${Chat} path="/"/>
               <${Chat} path="/:id?"/>
@@ -63,7 +63,7 @@ class Main extends Component {
       ` : html`<${Login}/>`;
     }
     return html`
-      <div class="container mx-auto px-0" id="main-content">
+      <div id="main-content">
         ${content}
       </div>
     `;

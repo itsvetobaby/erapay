@@ -134,7 +134,7 @@ class Point extends MeshView {
   onClickDelete() {
     if (confirm('Delete point? This cannot be undone.')) {
       State.public.user().get('mesh').get('points').get(this.props.point).put(null);
-      route('/mesh/' + this.props.mesh);
+      route('/mesh/');
     }
   }
 
@@ -415,8 +415,32 @@ class Point extends MeshView {
       type: "Donation"
     };
     console.log(point)
-    State.public.user().get('mesh').get('points').get(rand_int).put(point);
-      
+
+
+
+    var keepCount = []
+    var howMany = State.public.user().get('mesh').get('points')
+
+    howMany.map(v => {
+      if(v){
+        keepCount.push(v.id)
+      } else{
+        return false
+      }
+    })
+
+    let uniqueChars = keepCount.filter((c, index) => {
+      return keepCount.indexOf(c) === index;
+    });
+
+    console.log(uniqueChars.length)
+    
+    if (uniqueChars.length > 4){
+      confirm('You Currently have 5 active checkouts, please delete one or upgrade your account.')
+    } else {
+      State.public.user().get('mesh').get('points').get(rand_int).put(point);
+    }    
+
 
     route(`/mesh/`)
   }

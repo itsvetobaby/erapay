@@ -3,10 +3,10 @@ import Helpers from './Helpers.js';
 import Session from './Session.js';
 
 var MAX_PEER_LIST_SIZE = 10;
-const ELECTRON_GUN_URL = '';
+const ELECTRON_GUN_URL = 'http://localhost:8080/gun';
 var maxConnectedPeers = iris.util.isElectron ? 2 : 1;
 const DEFAULT_PEERS = {
-  'https://gun-manhattan.herokuapp.com/gun': {},
+  'https://gunjs.herokuapp.com/gun': {}
 };
 var knownPeers = getSavedPeers();
 

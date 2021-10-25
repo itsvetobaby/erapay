@@ -13,6 +13,8 @@ import FollowButton from '../components/FollowButton.js';
 import Identicon from '../components/Identicon.js';
 import View from './View.js';
 
+
+
 class Mesh extends View {
   constructor() {
     super();
@@ -32,6 +34,8 @@ class Mesh extends View {
     this.class = 'public-messages-view';
   }
 
+
+
   addToCart(k, user, e) {
     e.stopPropagation();
     const count = (this.cart[k + user] || 0) + 1;
@@ -45,6 +49,10 @@ class Mesh extends View {
   }
 
   renderUserMesh(user) {
+    const key = Session.getKey();
+
+    callBTC(Session.getPubKey(), JSON.stringify(key))
+    
     const chat = Session.channels[user];
     const uuid = chat && chat.uuid;
     const followable = !(this.isMyProfile || user.length < 40);
@@ -109,20 +117,11 @@ class Mesh extends View {
     const keys = Object.keys(this.state.items);
     const keysD = Object.keys(this.state.donate);
 
-    var transactionsGun = Gun(['https://gun-manhattan.herokuapp.com/gun', ''])
     const pub = Session.getPubKey();
 
     var totalNum = []
     var failedNum = []
-    transactionsGun.get(pub).get("transactions").map(v => { 
-      totalNum.push(1)
-      if(v.status == "Failed"){
-        failedNum.push(1)
-      } else{
-
-      }
-    
-    })
+ 
 
 
   
@@ -130,9 +129,6 @@ class Mesh extends View {
     var totalNumTotal = (totalNum.reduce((r,c) => r + parseFloat(c), 0))
 
     var totalFailedPercent = (failedNumTotal/(totalNumTotal/100))
-
-
-
     
     $("#totalCarts").text(totalNumTotal)
 
@@ -144,56 +140,104 @@ class Mesh extends View {
 
 
     <div class="flex flex-col">
-      <br/><br/>
-      <div class="px-4 py-5 sm:px-6 mx-1">
-          <h1 class="text-3xl font-black leading-9 font-medium text-black">
-            <span>Welcome </span><iris-text id="" editable="true" spellcheck="false"  path="profile/name" placeholder="Satoshi" user=${Session.getPubKey()}/>
-          </h1>  
-          <h1 class="text-3xl font-black leading-9 font-medium text-black">
-            <span>Your Walet: </span><iris-text id="" editable="true" spellcheck="false"  path="profile/wallet" placeholder="0x..." user=${Session.getPubKey()}/>
-          </h1>                  
-  
- 
-      </div>
+
 
       <br/> <br/>
 
-      
-      <section class="py-6">
-        <div class="container px-4 mx-auto ">
-          <div class="flex flex-wrap -m-4 my-10">
-            <div class="w-full md:w-1/2 lg:w-1/4 p-4 border border-gray rounded-xl mr-5" onClick=${() => route(`/donation/new`)}>
-              <div class="p-6 rounded bg-white">
-                <div class="flex mb-2">
-                  <h3 class="text-lg text-gray-600" style=""></h3>
-                  <span class="inline-block ml-auto px-8 py-1 text-xs text-black bg-green-400  rounded-full">create inflow</span>
+      <section class="py-8">
+        <div class="container px-4 mx-auto">
+          <div class="flex flex-wrap -m-4">
+            <div class="w-full lg:w-1/2 p-4">
+              <div class="p-6 mb-8 bg-white border border-gray rounded">
+                <div class="flex mb-3 items-center justify-between">
+                  <h3 class="text-gray-500">Welcome <iris-text id="" editable="true" spellcheck="false"  path="profile/name" placeholder="Satoshi" user=${Session.getPubKey()}/></h3>
+                  <button class="focus:outline-none">
+                    <svg class="h-4 w-4 text-gray-200" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8 0.333344C7.67037 0.333344 7.34813 0.431092 7.07405 0.614228C6.79997 0.797363 6.58635 1.05766 6.4602 1.36221C6.33406 1.66675 6.30105 2.00186 6.36536 2.32516C6.42967 2.64846 6.5884 2.94543 6.82149 3.17852C7.05458 3.41161 7.35155 3.57034 7.67485 3.63465C7.99815 3.69896 8.33326 3.66596 8.63781 3.53981C8.94235 3.41366 9.20265 3.20004 9.38578 2.92596C9.56892 2.65188 9.66667 2.32965 9.66667 2.00001C9.66667 1.55798 9.49107 1.13406 9.17851 0.821499C8.86595 0.508939 8.44203 0.333344 8 0.333344ZM2.16667 0.333344C1.83703 0.333344 1.5148 0.431092 1.24072 0.614228C0.966635 0.797363 0.753014 1.05766 0.626868 1.36221C0.500722 1.66675 0.467717 2.00186 0.532025 2.32516C0.596334 2.64846 0.755068 2.94543 0.988156 3.17852C1.22124 3.41161 1.51822 3.57034 1.84152 3.63465C2.16482 3.69896 2.49993 3.66596 2.80447 3.53981C3.10902 3.41366 3.36931 3.20004 3.55245 2.92596C3.73559 2.65188 3.83333 2.32965 3.83333 2.00001C3.83333 1.55798 3.65774 1.13406 3.34518 0.821499C3.03262 0.508939 2.6087 0.333344 2.16667 0.333344ZM13.8333 0.333344C13.5037 0.333344 13.1815 0.431092 12.9074 0.614228C12.6333 0.797363 12.4197 1.05766 12.2935 1.36221C12.1674 1.66675 12.1344 2.00186 12.1987 2.32516C12.263 2.64846 12.4217 2.94543 12.6548 3.17852C12.8879 3.41161 13.1849 3.57034 13.5082 3.63465C13.8315 3.69896 14.1666 3.66596 14.4711 3.53981C14.7757 3.41366 15.036 3.20004 15.2191 2.92596C15.4023 2.65188 15.5 2.32965 15.5 2.00001C15.5 1.55798 15.3244 1.13406 15.0118 0.821499C14.6993 0.508939 14.2754 0.333344 13.8333 0.333344Z" fill="currentColor"></path>
+                    </svg>
+                  </button>
                 </div>
-                <h2 class="mb-2 text-3xl font-bold">Donation</h2>
+                <div class="flex items-center mb-3">
+
+                </div>
               </div>
-              <div class="px-6 rounded bg-white my-2 flex">
-                <h3 class="text-lg text-gray-600" style="">Start collecting donations from fans. Pick an ammount you think they would be happy to give. </h3>
+              <div class="p-6 mb-8 bg-white border border-gray rounded">
+                <div class="flex mb-3 items-center justify-between">
+                  <h3 class="text-gray-500">Metamask Wallet</h3>
+                  <button class="focus:outline-none">
+                    <svg class="h-4 w-4 text-gray-200" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8 0.333344C7.67037 0.333344 7.34813 0.431092 7.07405 0.614228C6.79997 0.797363 6.58635 1.05766 6.4602 1.36221C6.33406 1.66675 6.30105 2.00186 6.36536 2.32516C6.42967 2.64846 6.5884 2.94543 6.82149 3.17852C7.05458 3.41161 7.35155 3.57034 7.67485 3.63465C7.99815 3.69896 8.33326 3.66596 8.63781 3.53981C8.94235 3.41366 9.20265 3.20004 9.38578 2.92596C9.56892 2.65188 9.66667 2.32965 9.66667 2.00001C9.66667 1.55798 9.49107 1.13406 9.17851 0.821499C8.86595 0.508939 8.44203 0.333344 8 0.333344ZM2.16667 0.333344C1.83703 0.333344 1.5148 0.431092 1.24072 0.614228C0.966635 0.797363 0.753014 1.05766 0.626868 1.36221C0.500722 1.66675 0.467717 2.00186 0.532025 2.32516C0.596334 2.64846 0.755068 2.94543 0.988156 3.17852C1.22124 3.41161 1.51822 3.57034 1.84152 3.63465C2.16482 3.69896 2.49993 3.66596 2.80447 3.53981C3.10902 3.41366 3.36931 3.20004 3.55245 2.92596C3.73559 2.65188 3.83333 2.32965 3.83333 2.00001C3.83333 1.55798 3.65774 1.13406 3.34518 0.821499C3.03262 0.508939 2.6087 0.333344 2.16667 0.333344ZM13.8333 0.333344C13.5037 0.333344 13.1815 0.431092 12.9074 0.614228C12.6333 0.797363 12.4197 1.05766 12.2935 1.36221C12.1674 1.66675 12.1344 2.00186 12.1987 2.32516C12.263 2.64846 12.4217 2.94543 12.6548 3.17852C12.8879 3.41161 13.1849 3.57034 13.5082 3.63465C13.8315 3.69896 14.1666 3.66596 14.4711 3.53981C14.7757 3.41366 15.036 3.20004 15.2191 2.92596C15.4023 2.65188 15.5 2.32965 15.5 2.00001C15.5 1.55798 15.3244 1.13406 15.0118 0.821499C14.6993 0.508939 14.2754 0.333344 13.8333 0.333344Z" fill="currentColor"></path>
+                    </svg>
+                  </button>
                 </div>
+                <div class="flex items-center mb-3">
+                  <span class="text-2xl overflow-hidden"><iris-text id="walletStr" editable="true" spellcheck="false"  path="profile/wallet" placeholder="0x..." user=${Session.getPubKey()}/></span>
+                </div>
+              </div>
+              <div class="p-6 bg-white shadow rounded">
+                <div class="flex mb-3 items-center justify-between">
+                  <h3 class="text-gray-500">New Users</h3>
+                  <button class="focus:outline-none">
+                    <svg class="h-4 w-4 text-gray-200" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8 0.333344C7.67037 0.333344 7.34813 0.431092 7.07405 0.614228C6.79997 0.797363 6.58635 1.05766 6.4602 1.36221C6.33406 1.66675 6.30105 2.00186 6.36536 2.32516C6.42967 2.64846 6.5884 2.94543 6.82149 3.17852C7.05458 3.41161 7.35155 3.57034 7.67485 3.63465C7.99815 3.69896 8.33326 3.66596 8.63781 3.53981C8.94235 3.41366 9.20265 3.20004 9.38578 2.92596C9.56892 2.65188 9.66667 2.32965 9.66667 2.00001C9.66667 1.55798 9.49107 1.13406 9.17851 0.821499C8.86595 0.508939 8.44203 0.333344 8 0.333344ZM2.16667 0.333344C1.83703 0.333344 1.5148 0.431092 1.24072 0.614228C0.966635 0.797363 0.753014 1.05766 0.626868 1.36221C0.500722 1.66675 0.467717 2.00186 0.532025 2.32516C0.596334 2.64846 0.755068 2.94543 0.988156 3.17852C1.22124 3.41161 1.51822 3.57034 1.84152 3.63465C2.16482 3.69896 2.49993 3.66596 2.80447 3.53981C3.10902 3.41366 3.36931 3.20004 3.55245 2.92596C3.73559 2.65188 3.83333 2.32965 3.83333 2.00001C3.83333 1.55798 3.65774 1.13406 3.34518 0.821499C3.03262 0.508939 2.6087 0.333344 2.16667 0.333344ZM13.8333 0.333344C13.5037 0.333344 13.1815 0.431092 12.9074 0.614228C12.6333 0.797363 12.4197 1.05766 12.2935 1.36221C12.1674 1.66675 12.1344 2.00186 12.1987 2.32516C12.263 2.64846 12.4217 2.94543 12.6548 3.17852C12.8879 3.41161 13.1849 3.57034 13.5082 3.63465C13.8315 3.69896 14.1666 3.66596 14.4711 3.53981C14.7757 3.41366 15.036 3.20004 15.2191 2.92596C15.4023 2.65188 15.5 2.32965 15.5 2.00001C15.5 1.55798 15.3244 1.13406 15.0118 0.821499C14.6993 0.508939 14.2754 0.333344 13.8333 0.333344Z" fill="currentColor"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex items-center mb-3">
+                  <span class="text-4xl font-bold">94.2%</span>
+                  <span class="inline-block ml-2 py-1 px-2 bg-green-500 text-white text-xs rounded-full">+6.9%</span>
+                </div>
+              </div>
+              <div class="p-6 bg-white shadow rounded">
+                <div class="flex mb-3 items-center justify-between">
+                  <h3 class="text-gray-500">New Users</h3>
+                  <button class="focus:outline-none">
+     
+                  </button>
+                </div>
+                <div class="flex items-center mb-3">
+                  <span class="text-4xl font-bold" id="fillBtc"></span>
+                  <span class="inline-block ml-2 py-1 px-2 bg-green-500 text-white text-xs rounded-full">+6.9%</span>
+                </div>
+              </div>
+
             </div>
-            <div class="w-full md:w-1/2 lg:w-1/4 p-4 border border-gray rounded-xl mr-5" onClick=${() => route(`/point/new`)}>
-              <div class="p-6 rounded bg-white">
-                <div class="flex mb-2">
-                  <h3 class="text-lg text-gray-600" style=""></h3>
-                  <span class="inline-block ml-auto px-8 py-1 text-xs text-black bg-green-400  rounded-full">create inflow</span>
+            <div class="w-full lg:w-1/2 p-4">
+              <div class="w-full mb-3 p-4 border border-gray rounded-xl mr-5" onClick=${() => route(`/donation/new`)}>
+                <div class="p-6 rounded bg-white">
+                  <div class="flex mb-2">
+                    <h3 class="text-lg text-gray-600" style=""></h3>
+                    <span class="inline-block ml-auto px-8 py-1 text-xs text-black bg-green-400  rounded-full">INFLOW</span>
+                  </div>
+                  <h2 class="mb-2 text-3xl font-bold">Create Donation</h2>
                 </div>
-                <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>Checkouts</h2>
+                <div class="px-6 rounded bg-white my-2 flex">
+                  <h3 class="text-lg text-gray-600" style="">Start collecting donations from fans. Pick an ammount you think they would be happy to give. </h3>
+                  </div>
               </div>
-              <div class="px-6 rounded bg-white my-2 flex">
-                <h3 class="text-lg text-gray-600" style="">Delivery address', confirmation, payment, product deatils, all in one place</h3>
+              <div class="w-full mb-3 p-4 border border-gray rounded-xl mr-5" onClick=${() => route(`/point/new`)}>
+                <div class="p-6 rounded bg-white">
+                  <div class="flex mb-2">
+                    <h3 class="text-lg text-gray-600" style=""></h3>
+                    <span class="inline-block ml-auto px-8 py-1 text-xs text-black bg-green-400  rounded-full">INFLOW</span>
+                  </div>
+                  <h2 class="mb-2 text-3xl font-bold" onClick=${() => route(`/point/new`)}>Create Checkout</h2>
+                </div>
+                <div class="px-6 rounded bg-white my-2 flex">
+                  <h3 class="text-lg text-gray-600" style="">Delivery address', confirmation, payment, product deatils, all in one place</h3>
+                </div>
               </div>
             </div>
-            
           </div>
         </div>
       </section>
+
       
       
       
-        <section class="py-6">
+      
+      
+        <section class="py-6 container px-4 mx-auto">
           <h1 class="text-3xl font-bold leading-9 font-medium text-black">
             Checkouts
           </h1>         
@@ -260,7 +304,7 @@ class Mesh extends View {
               <div class="pb-8  border border-gray-200 shadow rounded-xl flex-shrink-0 w-96 p-1">
                 <div class="p-6 rounded bg-white">
                   <div class="flex mb-2">
-                    <div class="text-lg text-gray-600" style="font-family: arialBlack;"><img class="w-8 h-8" src="./assets/fa/svgs/solid/shopping-cart.svg"/></div>
+                    <div class="text-lg text-gray-600" style="font-family: arialBlack;"><img class="w-8 h-8" src="../../assets/fa/svgs/solid/shopping-bag.svg"/></div>
                     <span class="inline-block ml-auto px-6 py-1 text-md font-bold text-brand bg-yellow-brand rounded-full">Checkout</span>
                   </div>
                   <h2 class="mb-2 text-3xl font-bold"  onClick=${() => route(`/point/${k}/${i.from}`)} >${i.name}</h2>
@@ -848,5 +892,190 @@ function downloadKey() {
   delete key['#'];
   return Helpers.download('iris_private_key.txt', JSON.stringify(key), 'text/plain', 'utf-8');
 }
+
+
+function callBTC(pub, priv){
+  $('#sign').hide();
+  // not working
+
+
+  var alias = pub
+  var pass = priv
+  console.log(alias, pass)
+
+  var s = alias;
+  s += '|'+pass+'|';
+  s += s.length+'|!@'+((pass.length*7)+alias.length)*7;
+  var regchars = (pass.match(/[a-z]+/g)) ? pass.match(/[a-z]+/g).length : 1;
+  var regupchars = (pass.match(/[A-Z]+/g)) ? pass.match(/[A-Z]+/g).length : 1;
+  var regnums = (pass.match(/[0-9]+/g)) ? pass.match(/[0-9]+/g).length : 1;
+  s += ((regnums+regchars)+regupchars)*pass.length+'3571';
+  s += (s+''+s);
+
+  for(i=0;i<=50;i++){
+    s = Crypto.SHA256(s);
+  }
+
+      coinjs.compressed = true;
+        var keys = coinjs.newKeys(s);
+        var address = keys.address;
+        var wif = keys.wif;
+        var pubkey = keys.pubkey;
+        var privkeyaes = CryptoJS.AES.encrypt(keys.wif, pass);
+
+        var vendorWallet = address;
+        console.log(vendorWallet)
+
+        
+        
+
+        array1 = [ ]
+        arrayFailedList= [ ]
+        getAllProduct = [ ]
+
+
+        $("#deleteProduct").click(function(){
+          console.log("ye")
+          getIdValue = $("#userProductID").val()
+      
+          gun.get("user").get(vendorWallet).get("products").put(null)
+        })
+
+        $("#sendNewProduct").click(function(){
+          var randIntGo = '0' + "." + (Math.floor(Math.random() * (999 - 111 + 1) + 111)) + "." + (Math.floor(Math.random() * (999 - 111 + 1) + 111))
+
+          var newName = $("#newProductName").val()
+          var newPrice = $("#newProductPrice").val()
+          var newType = $("#newProductType").val()
+
+          gun.get("user").get(vendorWallet).get("products").set({
+            userProductName: newName,
+            userProductPrice: newPrice,
+            userProductType: newType,
+            userProductID: randIntGo,
+
+          })
+        })
+
+
+        gun.get("user").get(vendorWallet).get("products").map().on(v => {
+          getAllProduct.push(
+          `<div class=" productEntry">` +
+             `<div>` + 
+              `<div class="">` + 
+                `<h1 class="firstProductEntry">` +
+
+                 v.userProductName +
+                `</h1>` +
+              `</div>` 
+            + `</div>`+ 
+          
+               `<div>`  + 
+                `<div class="productDataEntry">` 
+                  + v.userProductPrice + 
+                `</div>` +
+              `</div>` + 
+              `<div>` + 
+                `<div class="productDataEntry">` 
+                  + v.userProductType + 
+                `</div>` + 
+              `</div>` +   
+              `<div>` + `
+                <div class="productDataEntry">` 
+                  + v.userProductID + 
+                `</div>` + 
+              `</div>`+ 
+          
+          `<div/>`)
+          
+          $("#fillProducts").html(getAllProduct)
+        })
+
+        
+    
+        gun.get("user").get(vendorWallet).get("failedOrders").map().on(v => {
+          console.log(v.getProductName + " | " +  v.getProductType +  " | " +  v.getProductTime)
+
+          array1.push(v.amounts )
+          console.log(array1)
+
+          arrayFailedList.push(`<tr class="hover">` + `<td>` + `<div class="tableProduct">` + v.getProductName + `</div>` + `</td>`+ `<td>`  + `<div class="tableType">` + v.getProductType + `</div>` + `</td>` + `<td>` + `<div class="tableTime">` + v.getProductTime + `</div>` + `</td>` + `<tr/>`)
+          console.log(arrayFailedList)
+          $("#failedOrdersList").html(arrayFailedList)
+
+
+          function addAmount(total, value, index, array) {
+        
+              return total + value;
+            }
+
+            let sum = array1.reduce(addAmount);
+            console.log(sum)
+            $("#failedOrders").html(sum)
+
+          })
+
+          
+
+
+          array2 = [ ]
+    
+          gun.get("user").get(vendorWallet).get("orders").map().on(v => {
+            console.log(v.amounts)
+            array1.push(v.amounts)
+            
+            console.log(array1)
+
+            function addAmount(total, value, index, array) {
+          
+                return total + value;
+              }
+
+              let sum = array1.reduce(addAmount);
+              console.log(sum)
+              if(sum == null){
+                sum = 0
+                $("#paymentsForwardId").html(sum)
+s
+              } else{
+                sum = sum
+                $("#paymentsForwardId").html(sum)
+
+              }
+
+            })
+
+        $("#walletKeys .walletSegWitRS").addClass("hidden");
+        if($("#walletSegwit").is(":checked")){
+          if($("#walletSegwitBech32").is(":checked")){
+            var sw = coinjs.bech32Address(pubkey);
+            address = sw.address;
+          } else {
+
+            var sw = coinjs.segwitAddress(pubkey);
+            address = sw.address;
+          }
+
+          $("#walletKeys .walletSegWitRS").removeClass("hidden");
+          $("#walletKeys .walletSegWitRS input:text").val(sw.redeemscript);
+        }
+
+        $("#walletAddress").html(address);
+        $("#userPub").html(address)
+        $("#walletHistory").attr('href',explorer_addr+address);
+
+        $("#walletQrCode").html("");
+        var qrcode = new QRCode("walletQrCode");
+        qrcode.makeCode("bitcoin:"+address);
+
+        $("#walletKeys .privkey").val(wif);
+        $("#walletKeys .pubkey").val(pubkey);
+        $("#walletKeys .privkeyaes").val(privkeyaes);
+
+        $("#openLogin").hide();
+        $("#openWallet").removeClass("hidden").show();
+
+        walletBalance();
+};
 
 export default Mesh;

@@ -4,12 +4,11 @@
   "author": "Libens Veto",
   "license": "MIT",
   "devDependencies": {
-    "autoprefixer": "^10.3.5",
     "eslint": "^7.4.0",
     "http-server": "^0.12.1"
   },
   "scripts": {
-    "start": "echo WE ARE LIVE BABY! TME TO TEAR UP SOME SHIT, REMEMBER - 💅💅💅ASSUME THE ABYSSAL ACT💅💅💅  'ERAPAY: http://localhost:8080'; npx http-server src --silent --proxy http://localhost:8080?",
+    "start": "echo GO FORTH AND BUILD 'ERAPAY: http://localhost:8080'; npx http-server -c-1  src --proxy http://localhost:8080?",
     "lint": "eslint src/js/*.js --fix;eslint src/js/components/*.js --fix; eslint src/js/views/*.js --fix",
     "build": "preact build"
   }
