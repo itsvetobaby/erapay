@@ -238,8 +238,7 @@ class Main extends Component {
           <div class="overlay" onClick=${e => this.onClickOverlay(e)}></div>
           <div class="view-area">
             <${Router} history=${createHashHistory()} onChange=${e => this.handleRoute(e)}>
-              <${Home} path="/"/>
-              <${Home} path="/home"/>
+  
 
               <${Login} path="/login"/>
               <${Chat} path="/chat/:id?"/>
@@ -248,7 +247,11 @@ class Main extends Component {
 
               <${Message} path="/post/:hash"/>
               <${Torrent} path="/torrent/:id"/>
+
+
+              <${About} path="/"/>
               <${About} path="/about"/>
+              
               <${Pricing} path="/pricing"/>
 
               <${Settings} path="/settings"/>
