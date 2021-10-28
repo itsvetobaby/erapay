@@ -1,8 +1,8 @@
 import { render } from './lib/preact.js';
-import { Router, route } from './lib/preact-router.es.js';
-import { createHashHistory } from './lib/history.production.min.js';
+import { Router } from './lib/preact-router.es.js';
 import { Component } from './lib/preact.js';
 import { Link } from './lib/preact.match.js';
+import { createHashHistory } from '../js/lib/history.production.min.js';
 
 import Helpers from './Helpers.js';
 import { html } from './Helpers.js';
@@ -13,37 +13,33 @@ import { translate as t } from './Translation.js';
 
 import Settings from './views/Settings.js';
 import LogoutConfirmation from './views/LogoutConfirmation.js';
-
 import Chat from './views/Chat.js';
-import Pricing from './views/Pricing.js';
-
 import Mesh from './views/Mesh.js';
+import Checkout from './views/Checkout.js';
+
 import Point from './views/Point.js';
 import Donation from './views/Donation.js';
 
+import Upgrade from './views/Upgrade.js';
 
 import Login from './views/Login.js';
-
-
-import Home from './views/Home.js';
-
 import Profile from './views/Profile.js';
 import Group from './views/Group.js';
 import Message from './views/Message.js';
 import Follows from './views/Follows.js';
+
 import About from './views/About.js';
-import Orders from './views/Orders.js';
-
-
 import Explorer from './views/Explorer.js';
 import Contacts from './views/Contacts.js';
 import Torrent from './views/Torrent.js';
 
 import VideoCall from './components/VideoCall.js';
 import Identicon from './components/Identicon.js';
+import MediaPlayer from './components/MediaPlayer.js';
 import Footer from './components/Footer.js';
 import State from './State.js';
 import Icons from './Icons.js';
+
 
 var settingsIcon = html`<i class="fas fa-cog"></i>`
 
@@ -59,25 +55,19 @@ if (!isElectron && ('serviceWorker' in navigator)) {
   });
 }
 
-var orderSvg = html`<div style="display: flex; margin-top: 2px"> <i class="fas fa-level-up-alt" ></i><i style="margin-left: -2px" class="fas fa-level-down-alt" ></i></div>`
-var folderSvg = html`<i class="fas fa-grip-lines"></i>`
-var chatSvg = html`<i class="far fa-comment-alt"></i>`
-var profileSvg = html`<i class="far fa-user"></i>`
-var ixnayText = html`<h1 style="font-family: arialBlack; font-size: 2em;margin-top: -0.5em; margin-bottom: 0px; z-index: 100">IXNAY</h1>`
-var cog = html`<i  class="fas fa-cog"></i>`
-var data = html`<i class="fas fa-database"></i>`
-var person = html`<i class="fas fa-user-circle"></i>`
-var info = html`<i class="fas fa-info-circle"></i>`
+
+var profileSvg = html`<i class="fas fa-user-alt"></i>`
+var ERAPAYText = html`
+<div class="flex">
+ 
+  <h1 style="font-family: arialBlack; margin-right: 0.3em">ERAPAY</h1>
+</div>
+`
 
 var home =  html`<div style="display: flex;margin-left: 0px; ">
-
 <div class="smolbar3"></div>
 <div class="smolbar3"></div>
-<div class="smolbar3 "></div>
-
-<h2 style="font-family: arialBlack; font-size: 35px; margin: 0px; margin-left: 1em">IXNAY</h2>
-
-
+<div class="smolbar3"></div>
 </div>`;
 
 State.init();
@@ -87,27 +77,13 @@ PeerManager.init();
 Helpers.checkColorScheme();
 
 const APPLICATIONBRAND = [ // TODO: move editable shortcuts to localState gun
-  {url: '/', text: home, icon: Icons.home , classCss: " hideWhite"},
+  {url: '/', text: ERAPAYText, icon: Icons.home , classCss: " hideWhite"},
 ];
 
 
 const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
-
-  {url: '/orders', text: "Orders", icon: Icons.store , classCss: "midCon"},
-  {url: '/chat', text: "Messages", icon: Icons.store , classCss: "midCon"},
-
-  
-];
-
-
-
-const APPLICATIONSSECOND = [ // TODO: move editable shortcuts to localState gun
-
-  {url: '/settings', text: cog, icon: Icons.settings , classCss: "firstCon"},
-  {url: '/explorer', text: data, icon: Icons.settings , classCss: "midCon"},
-  {url: '/profile', text: person, icon: Icons.settings, classCss: "midCon"},
-  {url: '/about', text: info, icon: Icons.settings , classCss: "lastCon"},
-
+  {url: '/settings', text: profileSvg, icon: Icons.settings , classCss: " lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-50 hover:bg-gray-100 text-sm text-gray-900 font-bold rounded-l-xl rounded-t-xl transition duration-200"},
+  {url: '/mesh', text: "Dashboard", icon: Icons.settings , classCss: "  lg:inline-block py-2 px-6 bg-yellow-brand hover:bg-black hover:text-white text-sm text-white font-bold rounded-l-xl rounded-t-xl transition duration-200"},
 
 ];
 
@@ -128,60 +104,38 @@ class Menu extends Component {
   render() {
     const pub = Session.getPubKey();
     return html`
+    <section >
+      <nav class="relative px-6 py-6">
+        <div class="flex items-center">
+
+        ${APPLICATIONBRAND.map(a => {
+          if (a.url) {
+            return html`
+              <${a.native ? 'a' : Link} onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${a.url}>
+                <span class="text-3xl font-bold leading-none" >${a.text}</span>
+              <//>`;
+          } else {
+            return html`<br/><br/>`;
+          }
+        })}
+          ${APPLICATIONS.map(a => {
+            if (a.url) {
+              return html`
+                <${a.native ? 'a' : Link} class=${a.classCss} onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${a.url}>
+                  <span class="text-sm text-gray-400 hover:text-gray-500" >${a.text}</span>
+                <//>`;
+            } else {
+              return html`<br/><br/>`;
+            }
+          })}
+          </div>
+      </nav>
+    </section>
  
-      <div class="application-list ">
-        <div class="container" style="padding: 0% 0.8%;">
-          <div class="columns twelve">
-            ${APPLICATIONBRAND.map(a => {
-              if (a.url) {
-                return html`
-                  <${a.native ? 'a' : Link} class="flex " style="margin-top: 0px" onClick=${() => this.menuLinkClicked()} activeClassName="" href=${a.url}>
 
-                    <span class="text right ${a.classCss}">${a.text}</span>
-                  <//>`;
-              } else {
-                return html`<br/><br/>`;
-              }
-            })}
-          </div>
-          <div class="columns twelve hideAppl" style="display: flex;padding-bottom: 10px">
-            <div class="visible-xs-block">
-              <${Link} onClick=${() => this.menuLinkClicked()} activeClassName="active" href="/profile/${pub}">
-                <span class="icon"><${Identicon} str=${pub} width=40/></span>
-                <span class="text" style="font-size: 1.2em;border:0;margin-left: 7px;"><iris-text user="${pub}" path="profile/name" editable="false"/></span>
-              <//>
-              <br/><br/>
-            </div>
+   
+              
 
-            ${APPLICATIONS.map(a => {
-              if (a.url) {
-                return html`
-                  <${a.native ? 'a' : Link} class="flex  menuItem" style="margin-top: 0px" onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${a.url}>
-
-                    <span class="text right ${a.classCss}">${a.text}</span>
-                  <//>`;
-              } else {
-                return html`<br/><br/>`;
-              }
-            })}
-
-            <div class="flex-auto"></div>
-
-            ${APPLICATIONSSECOND.map(b => {
-              if (b.url) {
-                return html`
-                  <${b.native ? 'a' : Link} class="flex menuItem" style="margin-top: 0px" onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${b.url}>
-
-                    <span class="text right ${b.classCss}">${b.text}</span>
-                  <//>`;
-              } else {
-                return html`<br/><br/>`;
-              }
-            })}
-          </div>
-        </div>
-        
-      </div>
     `;
   }
 }
@@ -199,7 +153,7 @@ class Main extends Component {
     if (!activeRoute && window.location.hash) {
       return route(window.location.hash.replace('#', '')); // bubblegum fix back navigation
     }
-    document.title = 'IXNAY';
+    document.title = 'ERAPAY';
     if (activeRoute && activeRoute.length > 1) { document.title += ' - ' + Helpers.capitalize(activeRoute.replace('/', '')); }
     State.local.get('activeRoute').put(activeRoute);
     QRScanner.cleanupScanner();
@@ -234,56 +188,48 @@ class Main extends Component {
                </div>
           </div>
         ` : ''}
-        <section class="main ${isDesktopNonMac ? 'desktop-non-mac' : ''} ${this.state.showMenu ? 'menu-visible-xs' : ''}" style="flex-direction: row;">
+        <div class="${isDesktopNonMac ? 'desktop-non-mac' : ''} ${this.state.showMenu ? 'menu-visible-xs' : ''}">
           <${Menu}/>
           <div class="overlay" onClick=${e => this.onClickOverlay(e)}></div>
-          <div class="view-area">
+          <div class="">
             <${Router} history=${createHashHistory()} onChange=${e => this.handleRoute(e)}>
-              <${Home} path="/"/>
-              <${Home} path="/home"/>
 
-              <${Login} path="/login"/>
-              <${Chat} path="/chat/:id?"/>
+            <${Login} path="/login"/>
+            <${Chat} path="/chat/:id?"/>
+            <${Message} path="/post/:hash"/>
+            <${Torrent} path="/torrent/:id"/>
+            <${About} path="/"/>
+            <${About} path="/home"/>
+            <${Settings} path="/settings"/>
+            <${LogoutConfirmation} path="/logout"/>
+            <${Profile} path="/profile/:id?" tab="profile"/>
+            <${Profile} path="/replies/:id?" tab="replies"/>
+            <${Profile} path="/likes/:id?" tab="likes"/>
+            <${Profile} path="/media/:id" tab="media"/>
+            <${Group} path="/group/:id?"/>
 
-       
+            <${Mesh} path="/mesh/:mesh?"/>
 
-              <${Message} path="/post/:hash"/>
-              <${Torrent} path="/torrent/:id"/>
-              <${About} path="/about"/>
-              <${Pricing} path="/pricing"/>
-
-              <${Settings} path="/settings"/>
-              <${LogoutConfirmation} path="/logout"/>
-
-
-              <${Profile} path="/profile/:id?" tab="profile"/>
-              <${Profile} path="/replies/:id?" tab="replies"/>
-              <${Profile} path="/likes/:id?" tab="likes"/>
+            <${Upgrade} path="/upgrade"/>
 
 
-              <${Group} path="/group/:id?"/>
+            <${Point} path="/point/:point/:mesh"/>
+            <${Point} path="/point/new" mesh=Session.getPubKey()/>
 
-              <${Mesh} path="/mesh/:mesh?"/>
+            <${Donation} path="/donation/:donation/:mesh"/>
+            <${Donation} path="/donation/new" mesh=Session.getPubKey()/>
 
-              <${Orders} path="/orders/:orders?"/>
+            <${Checkout} path="/checkout/:point/:mesh"/>
+            <${Checkout} path="/checkout/new" mesh=Session.getPubKey()/>
 
-
-              <${Point} path="/point/:point/:mesh"/>
-              <${Point} path="/point/new" mesh=Session.getPubKey()/>
-
-
-              <${Donation} path="/donation/:donation/:mesh"/>
-              <${Donation} path="/donation/new" mesh=Session.getPubKey()/>
-
-              
-              <${Explorer} path="/explorer/:node"/>
-              <${Explorer} path="/explorer"/>
-              <${Follows} path="/follows/:id"/>
-              <${Follows} followers=${true} path="/followers/:id"/>
-              <${Contacts} path="/contacts"/>
+            <${Explorer} path="/explorer/:node"/>
+            <${Explorer} path="/explorer"/>
+            <${Follows} path="/follows/:id"/>
+            <${Follows} followers=${true} path="/followers/:id"/>
+            <${Contacts} path="/contacts"/>
             </${Router}>
           </div>
-        </section>
+        </div>
         <${Footer}/>
         <${VideoCall}/>
       ` : html`<${Login}/>`;
