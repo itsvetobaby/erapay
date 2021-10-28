@@ -89,7 +89,7 @@ const APPLICATIONBRAND = [ // TODO: move editable shortcuts to localState gun
 ];
 
 
-const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
+const APPLICATIONBRAND = [ // TODO: move editable shortcuts to localState gun
 
   {url: '/orders', text: "Orders", icon: Icons.store , classCss: "midCon"},
 
