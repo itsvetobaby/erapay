@@ -98,12 +98,10 @@ const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
 
 
 
-const APPLICATIONSSECOND = [ // TODO: move editable shortcuts to localState gun
+const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
 
-  {url: '/settings', text: cog, icon: Icons.settings , classCss: "firstCon"},
-  {url: '/explorer', text: data, icon: Icons.settings , classCss: "midCon"},
-  {url: '/profile', text: person, icon: Icons.settings, classCss: "midCon"},
-  {url: '/about', text: info, icon: Icons.settings , classCss: "lastCon"},
+
+  {url: '/mesh', text: info, icon: Icons.settings , classCss: "lastCon"},
 
 
 ];
