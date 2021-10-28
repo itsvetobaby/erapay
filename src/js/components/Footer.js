@@ -29,24 +29,31 @@ class Footer extends Component {
   }
 
   render() {
-    const key = Session.getPubKey();
-    if (!key) { return; }
+    const key = Session.getKey().pub;
     const activeRoute = this.state.activeRoute;
 
     if (this.chatId) {
       return html``;
     }
 
+    var orderSvg = html`<i class="fas fa-level-up-alt" ></i>`
+  var folderSvg = html`<i class="far fa-folder"></i>`
+  var chatSvg = html`<i class="far fa-comment-alt"></i>`
+  var profileSvg = html`<i class="far fa-user"></i>`
+
     return html`
     <footer class="visible-xs-flex nav footer">
       <div class="header-content" onClick=${() => State.local.get('scrollUp').put(true)}>
-        <a href="/" class="btn ${activeRoute && activeRoute === '/' ? 'active' : ''}">${Icons.home}</a>
         <a href="/chat" class="btn ${activeRoute && activeRoute.indexOf('/chat') === 0 ? 'active' : ''}">
           ${this.state.unseenTotal ? html`<span class="unseen unseen-total">${this.state.unseenTotal}</span>`: ''}
           ${Icons.chat}
         </a>
-        <a href="/post/new" class="btn ${activeRoute && activeRoute === '/post/new' ? 'active' : ''}">${plusIcon}</a>
-        <a href="/contacts" class="btn ${activeRoute && activeRoute === '/contacts' ? 'active' : ''}">${Icons.user}</a>
+        <a href="/orders" class="btn ${activeRoute && activeRoute === '/orders' ? 'active' : ''}">${Icons.order}</a>
+
+        <a href="/" class="btn ${activeRoute && activeRoute === '/' ? 'active' : ''}">${Icons.home}</a>
+
+        
+        <a href="/store/${key}" class="btn ${activeRoute && activeRoute === '/store/' + key ? 'active' : ''}">${Icons.catalog}</a>
         <a href="/profile/${key}" class="${activeRoute && activeRoute === '/profile/' + key ? 'active' : ''} my-profile">
           <${Identicon} str=${key} width=34 />
         </a>

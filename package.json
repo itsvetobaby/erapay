@@ -1,16 +1,70 @@
 {
-  "name": "ERAPAY",
-  "version": "0.1.0",
-  "author": "Libens Veto",
-  "license": "MIT",
-  "devDependencies": {
-    "autoprefixer": "^10.3.5",
-    "eslint": "^7.4.0",
-    "http-server": "^0.12.1"
-  },
+  "name": "electronixnay",
+  "productName": "electronixnay",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/index.js",
   "scripts": {
-    "start": "echo WE ARE LIVE BABY! TME TO TEAR UP SOME SHIT, REMEMBER - 💅💅💅ASSUME THE ABYSSAL ACT💅💅💅  'ERAPAY: http://localhost:8080'; npx http-server src --silent --proxy http://localhost:8080?",
-    "lint": "eslint src/js/*.js --fix;eslint src/js/components/*.js --fix; eslint src/js/views/*.js --fix",
-    "build": "preact build"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "alias": {
+    "react": "preact/compat",
+    "react-dom/test-utils": "preact/test-utils",
+    "react-dom": "preact/compat"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Antony",
+    "email": "allinto@icloud.com"
+  },
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "electronixnay"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "leaflet": "^1.7.1",
+    "leaflet-geosearch": "^3.5.0",
+    "parcel": "^2.0.0-beta.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-leaflet": "^3.2.0",
+    "stripe": "^8.167.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.57",
+    "@electron-forge/maker-deb": "^6.0.0-beta.57",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.57",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.57",
+    "@electron-forge/maker-zip": "^6.0.0-beta.57",
+    "electron": "13.1.5"
   }
 }

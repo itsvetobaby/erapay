@@ -1,10 +1,6 @@
 import {translate as t} from '../Translation.js';
 import { html } from '../Helpers.js';
 import View from './View.js';
-import { route } from '../lib/preact-router.es.js';
-import Session from '../Session.js';
-
-
 
 class About extends View {
   constructor() {
@@ -13,46 +9,52 @@ class About extends View {
   }
 
   renderView() {
-
-
-
     return html`
-    <section class="skewed-bottom-right">
-      <div class="bg-yellow-brand pt-12 lg:pt-20 shadow rounded-2xl p-4  pb-20 my-10 radius-for-skewed">
-        <div class="container mx-auto px-4">
-          <div class="flex flex-wrap -mx-4">
-            <div class="w-full lg:w-1/2 px-4 mb-12 md:mb-20 lg:mb-0 flex items-center">
-              <div class="w-full text-center lg:text-left">
-                <div class="mx-auto lg:mx-0">
-                  <h2 class="mb-3 text-4xl lg:text-5xl font-bold font-heading">
-                    <span>Open tooling for open tech.  </span>
-                    <span class="text-green-600"></span>
-                  </h2>
-                </div>
-                <div class="mx-auto lg:mx-0">
-                  <p class="mb-6 text-gray-400 leading-loose">An open source payments infrastucture for crypto. <br/><br/>Closed source webapps for dealing with crypto dont win any hearts. <br/> Erapay is built to keep the free open.</p>
-                  <div onClick=${() => route('/mesh/')}><a class="inline-block mb-3 lg:mb-0 lg:mr-3 w-full lg:w-auto py-2 px-6 leading-loose bg-black hover:bg-green-700 text-white font-semibold rounded-l-xl rounded-t-xl transition duration-200">Get Started</a><a class="inline-block w-full lg:w-auto py-2 px-6 leading-loose font-semibold bg-white hover:bg-gray-50 rounded-l-xl rounded-t-xl transition duration-200" href="#">How it works</a></div>
-                </div>
-              </div>
-            </div>
-            <div class="w-full lg:w-1/2 px-4 flex items-center justify-center">
-              <div class="relative" style="z-index: 0;">
-                <img class="h-128 w-full max-w-lg object-cover rounded-3xl md:rounded-br-none" src="./assets/erapaylogo.svg" alt=""/>
-                <img class="hidden md:block absolute" style="top:-2rem; right: 3rem; z-index: -1;" src="atis-assets/elements/green-dark-up.svg" alt=""/>
-                <img class="hidden md:block absolute" style="bottom:-2rem; right: -2rem; z-index: -1;" src="atis-assets/elements/wing-green-down.svg" alt=""/>
-                <img class="hidden md:block absolute" style="top:3rem; right: -3rem; z-index: -1;" src="atis-assets/elements/bullets-gray-right.svg" alt=""/>
-                <img class="hidden md:block absolute" style="bottom:2.5rem; left: -4.5rem; z-index: -1;" src="atis-assets/elements/bullets-gray-left.svg" alt=""/>
-              </div>
-            </div>
+      <div class="centered-container">
+        <h3>${t('about')}</h3>
+        <p>Iris is like the social networking apps we're used to, but better.</p>
+        <ul>
+          <li><b>No phone number or signup required.</b> Just type in your name or alias and go!</li>
+          <li><b>Secure</b>: It's open source. Users can validate that big brother doesn't read your private messages.</li>
+          <li><b>Available</b>: It works offline-first and is not dependent on any single centrally managed server. Users can even connect directly to each other.</li>
+        </ul>
+        <p>In other words, <b>you can't be deplatformed from Iris</b>.</p>
+        <p>Released under MIT license. Code: <a href="https://github.com/irislib/iris-messenger">Github</a>.</p>
+        <p><small>Version 1.7.1</small></p>
+
+        ${iris.util.isElectron ? '' : html`
+          <div id="desktop-application-about">
+            <h4>Get the desktop application</h4>
+            <ul>
+              <li>Communicate and synchronize with local network peers without Internet access
+                <ul>
+                  <li>When local peers eventually connect to the Internet, your messages are relayed globally</li>
+                  <li>Bluetooth support upcoming</li>
+                </ul>
+              </li>
+              <li>Opens to background on login: stay online and get message notifications</li>
+              <li>More secure and available: no need to open the browser application from a server</li>
+              <li>Direct-connect to the people you have an open chat with (if port 8767 open or upnp enabled in router)</li>
+            </ul>
+            <p><a href="https://github.com/irislib/iris-electron/releases">Download</a></p>
           </div>
-        </div>
+        `}
+
+        <h4>Privacy</h4>
+        <p>Private messages are end-to-end encrypted, but message timestamps and the number of chats aren't. In a decentralized network this information is potentially available to anyone.</p>
+        <p>By looking at timestamps in chats, it is possible to guess who are chatting with each other. There are potential technical solutions to hiding the timestamps, but they are not implemented yet. It is also possible, if not trivial, to find out who are communicating with each other by monitoring data subscriptions on the decentralized database.</p>
+        <p>In that regard, Iris prioritizes decentralization and availability over perfect privacy.</p>
+        <p>Profile names, photos and online status are currently public. That can be changed when advanced group permissions are developed.</p>
+        <p>Iris makes no guarantees of data persistence.</p>
+        <p>You can check your saved data in the <a href="#/explorer">Explorer</a>.</p>
+        <p>${t('application_security_warning')}</p>
+
+        <h4>Donate</h4>
+        <p>LibensVeto - monero: 47ELAfDaJa2g2Deh53Erv2QpB3oVb35egKwzS3tehpwANPXf9jYGQBkBos2BwpqY4uZwK4EGredXfXc37T3ipbTJH7GUZBX</p>
+        <p> Martti's - bitcoin: 3GopC1ijpZktaGLXHb7atugPj9zPGyQeST</p>
       </div>
-
-
-    </section>
-    
     `;
   }
-}
+};
 
 export default About;

@@ -45,7 +45,7 @@ class Header extends Component {
       this.setState({unseenTotal});
     });
     State.local.get('activeRoute').on(activeRoute => {
-      this.setState({about:null, title: ''});
+      this.setState({about:null});
       this.eventListeners.forEach(e => e.off());
       this.eventListeners = [];
       this.setState({activeRoute});
@@ -62,9 +62,10 @@ class Header extends Component {
         });
       }
 
+      let title = '';
       if (activeRoute.indexOf('/chat/') === 0 && activeRoute.indexOf('/chat/new') !== 0) {
         if (activeRoute.indexOf('/chat/') === 0 && Session.getKey() && this.chatId === Session.getKey().pub) {
-          const title = html`<b style="margin-right:5px">📝</b> <b>${t('note_to_self')}</b>`;
+          title = html`<b style="margin-right:5px">📝</b> <b>${t('note_to_self')}</b>`;
           this.setState({title});
         } else {
           State.local.get('channels').get(this.chatId).get('name').on((name, a, b, eve) => {
@@ -76,6 +77,8 @@ class Header extends Component {
             this.setState({about});
           });
         }
+      } else {
+        this.setState({title});
       }
     });
   }
@@ -96,12 +99,11 @@ class Header extends Component {
   }
 
   render() {
-    const key = Session.getPubKey();
-    if (!key) { return; }
     const activeRoute = this.state.activeRoute;
     const chat = Session.channels[this.chatId];
     const isTyping = chat && chat.isTyping;
     const onlineStatus = !(chat && chat.uuid) && activeRoute && activeRoute.length > 20 && !isTyping && this.getOnlineStatusText();
+    const key = Session.getKey().pub;
     const searchBox = this.chatId ? '' : html`<${SearchBox}/>`;
 
     return html`
@@ -114,7 +116,8 @@ class Header extends Component {
       <div class="header-content">
         ${iris.util.isElectron || (activeRoute && activeRoute.indexOf('/chat/') === 0) ? '' : html`
           <a href="/" onClick=${e => this.onLogoClick(e)} tabindex="0" class="visible-xs-flex logo">
- 
+            <img src="img/icon128.png" width=40 height=40/>
+            <img src="img/iris_logotype.png" height=23 width=41 />
           </a>
         `}
         <div class="text" style=${this.chatId ? 'cursor:pointer' : ''} onClick=${() => this.onTitleClicked()}>

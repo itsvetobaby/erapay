@@ -3,10 +3,10 @@ import Helpers from './Helpers.js';
 import Session from './Session.js';
 
 var MAX_PEER_LIST_SIZE = 10;
-const ELECTRON_GUN_URL = '';
+const ELECTRON_GUN_URL = 'http://localhost:8767/gun';
 var maxConnectedPeers = iris.util.isElectron ? 2 : 1;
 const DEFAULT_PEERS = {
-  'https://gun-manhattan.herokuapp.com/gun': {},
+  'https://gun-us.herokuapp.com/gun': {},
 };
 var knownPeers = getSavedPeers();
 
@@ -96,10 +96,7 @@ function getRandomPeers() {
   const sampleSize = connectToLocalElectron ? Math.max(maxConnectedPeers - 1, 1) : maxConnectedPeers;
   const sample = _.sample(
     Object.keys(
-      _.pick(knownPeers, (p, url) => {
-        const mixedContent = (window.location.protocol === 'https:' && (url.indexOf('http:') === 0));
-        return !mixedContent && p.enabled && !(iris.util.isElectron && url === ELECTRON_GUN_URL);
-      })
+      _.pick(knownPeers, (p, url) => { return p.enabled && !(iris.util.isElectron && url === ELECTRON_GUN_URL); })
     ), sampleSize
   );
   if (connectToLocalElectron) {
@@ -145,8 +142,7 @@ function checkGunPeerCount() {
     var unconnectedPeers = _.filter(Object.keys(knownPeers), url => {
       var addedToGun = _.pluck(Object.values(peersFromGun), 'url').indexOf(url) > -1;
       var enabled = knownPeers[url].enabled;
-      const mixedContent = (window.location.protocol === 'https:' && (url.indexOf('http:') === 0));
-      return !mixedContent && enabled && !addedToGun;
+      return enabled && !addedToGun;
     });
     if (unconnectedPeers.length) {
       connectPeer(_.sample(unconnectedPeers));
@@ -175,5 +171,6 @@ export default {
   disconnectPeer,
   disablePeer,
   askForPeers,
-  resetPeers
+  resetPeers,
+  checkGunPeerCount
 };

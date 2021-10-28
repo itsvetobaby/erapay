@@ -87,23 +87,22 @@ class NewChat extends Component {
   render() {
     return html`
       <div class="main-view" id="new-chat">
-        <h3>${t('have_someones_invite_link')}</h3>
-          <div class="btn-group">
-            <input id="paste-chat-link" onInput=${e => this.onPasteChatLink(e)} type="text" placeholder="${t('paste_their_invite_link')}"/>
-            <button id="scan-chatlink-qr-btn" onClick=${() => this.scanChatLinkQr()}>${t('or_scan_qr_code')}</button>
-          </div>
+        <button id="scan-chatlink-qr-btn" onClick=${() => this.scanChatLinkQr()}><i class="fas fa-camera-retro"></i></button>
+        <input style="background-color: #ffffff00" id="paste-chat-link" onInput=${e => this.onPasteChatLink(e)} type="text" placeholder="${t('paste_their_invite_link')}"/>
         <video id="chatlink-qr-video" width="320" height="320" style="object-fit: cover;"></video>
-        <h3>${t('give_your_invite_link')}</h3>
-        <div class="btn-group">
-          <${CopyButton} text=${t('copy_your_invite_link')} copyStr=${Session.getMyChatLink}/>
-          <button onClick=${() => $('#my-qr-code').toggle()}>${t('or_show_qr_code')}</button>
-        </div>
-        <p id="my-qr-code" class="qr-container" style="display:none"></p>
-        <p><small dangerouslySetInnerHTML=${{ __html: t('beware_of_sharing_invite_link_publicly', `href="/profile/${Session.getPubKey()}"`) }}></small></p>
+        <br/>        <br/>
+
+        <button onClick=${() => $('#my-qr-code').toggle()}><i class="fas fa-qrcode"></i></button>
+
+        <${CopyButton} text=${t('copy_your_invite_link')} copyStr=${Session.getMyChatLink}/>
+        <p id="my-qr-code" class="qr-container" style="display:none"></p>        <br/>
+        <br/>
+
+        <p><small dangerouslySetInnerHTML=${{ __html: t('beware_of_sharing_invite_link_publicly') }}></small></p>
         <h3>${t('new_group')}</h3>
         <p>
           <form id="new-group-form" onSubmit=${e => this.onCreateGroupSubmit(e)}>
-            <input id="new-group-name" type="text" placeholder="${t('group_name')}"/>
+            <input style="background-color: #ffffff00" id="new-group-name" type="text" placeholder="${t('group_name')}"/>
             <button type="submit">${t('create')}</button>
           </form>
         </p>

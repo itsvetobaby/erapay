@@ -1,6 +1,6 @@
 {
-    "name": "ERAPAY",
-    "short_name": "ERAPAY",
+    "name": "IXNAY",
+    "short_name": "IXNAY",
     "icons": [
         {
             "src": "img/android-chrome-192x192.png",
@@ -13,8 +13,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#000000",
+    "theme_color": "#74d5f1",
+    "background_color": "#74d5f1",
     "display": "standalone",
     "start_url": "/index.html"
 }

@@ -1,7 +1,8 @@
 import { html } from '../Helpers.js';
-import {translate as tr} from '../Translation.js';
+import {translate as t} from '../Translation.js';
 import State from '../State.js';
 import Session from '../Session.js';
+import Helpers from '../Helpers.js';
 import ProfilePhotoPicker from '../components/ProfilePhotoPicker.js';
 import { route } from '../lib/preact-router.es.js';
 import SafeImg from '../components/SafeImg.js';
@@ -10,6 +11,8 @@ import Identicon from '../components/Identicon.js';
 import Name from '../components/Name.js';
 import View from './View.js';
 import SearchBox from '../components/SearchBox.js';
+
+const SMS_VERIFIER_PUB = 'ysavwX9TVnlDw93w9IxezCJqSDMyzIU-qpD8VTN5yko.3ll1dFdxLkgyVpejFkEMOFkQzp_tRrkT3fImZEx94Co';
 
 function deleteChat(pub) {
   iris.Channel.deleteChannel(State.public, Session.getKey(), pub);
@@ -21,6 +24,8 @@ class Group extends View {
   constructor() {
     super();
     this.eventListeners = [];
+    this.followedUsers = new Set();
+    this.followers = new Set();
     this.id = "profile";
   }
 
@@ -67,7 +72,7 @@ class Group extends View {
     if (chat && chat.uuid) {
       return html`
         <div>
-          <p>${tr('participants')}:</p>
+          <p>${t('participants')}:</p>
           <div class="flex-table">
             ${
               chat ? Object.keys(chat.participantProfiles).map(k => {
@@ -81,14 +86,14 @@ class Group extends View {
                           <${Identicon} str=${k} width=40/>
                           <${Name} pub=${k}/>
                           ${profile.permissions && profile.permissions.admin ? html`
-                            <small style="margin-left:5px">${tr('admin')}</small>
+                            <small style="margin-left:5px">${t('admin')}</small>
                           `: ''}
                         </a>
                       </div>
                     </div>
                     ${this.state.isAdmin ? html`
                       <div class="flex-cell no-flex">
-                        <button onClick=${() => this.onRemoveParticipant(k)}>${tr('remove')}</button>
+                        <button onClick=${() => this.onRemoveParticipant(k)}>${t('remove')}</button>
                       </div>
                     ` : ''}
                   </div>
@@ -98,7 +103,7 @@ class Group extends View {
           </div>
           ${this.state.isAdmin ? html`
             <div>
-              <p>${tr('add_participant')}:</p>
+              <p>${t('add_participant')}:</p>
               <p>
               ${this.state.memberCandidate ? html`
                 <div class="profile-link-container"><div class="profile-link">
@@ -116,7 +121,7 @@ class Group extends View {
           `: ''}
           ${chat && chat.inviteLinks && Object.keys(chat.inviteLinks).length ? html`
             <hr/>
-            <p>${tr('invite_links')}</p>
+            <p>${t('invite_links')}</p>
             <div class="flex-table">
               ${Object.keys(chat.inviteLinks).map(id => {
                 const url = chat.inviteLinks[id];
@@ -131,7 +136,7 @@ class Group extends View {
                     </div>
                     ${this.state.isAdmin ? html`
                       <div class="flex-cell no-flex">
-                        <button onClick=${() => this.removeChatLink(id)}>${tr('remove')}</button>
+                        <button onClick=${() => this.removeChatLink(id)}>${t('remove')}</button>
                       </div>
                     `: ''}
                   </div>
@@ -149,6 +154,8 @@ class Group extends View {
   }
 
   renderView() {
+    const chat = Session.channels[this.props.id];
+    const uuid = chat && chat.uuid;
     const editable = this.state.isAdmin;
     let profilePhoto;
     if (editable) {
@@ -168,19 +175,37 @@ class Group extends View {
               ${profilePhoto}
             </div>
             <div class="profile-header-stuff">
-              <h3 class="profile-name" placeholder=${editable ? tr('name') : ''} contenteditable=${editable} onInput=${e => this.onNameInput(e)}>${this.state.name}</h3>
+              <h3 class="profile-name" placeholder=${editable ? t('name') : ''} contenteditable=${editable} onInput=${e => this.onNameInput(e)}>${this.state.name}</h3>
               <div class="profile-about hidden-xs">
-                <p class="profile-about-content" placeholder=${editable ? tr('about') : ''} contenteditable=${editable} onInput=${e => this.onAboutInput(e)}>${this.state.about}</p>
+                <p class="profile-about-content" placeholder=${editable ? t('about') : ''} contenteditable=${editable} onInput=${e => this.onAboutInput(e)}>${this.state.about}</p>
               </div>
               <div class="profile-actions">
-                <button onClick=${() => route('/chat/' + this.props.id)}>${tr('send_message')}</button>
-                <button onClick=${() => $('#profile-page-qr').toggle()}>${tr('show_qr_code')}</button>
-                <button class="show-settings" onClick=${() => this.onClickSettings()}>${tr('settings')}</button>
+                ${uuid ? '' : html`
+                  <div class="follow-count">
+                    <a href="/follows/${this.props.id}">
+                      <span>${this.state.followedUserCount}</span> ${t('following')}
+                    </a>
+                    <a href="/followers/${this.props.id}">
+                      <span>${this.state.followerCount}</span> ${t('followers')}
+                    </a>
+                  </div>
+                `}
+                ${this.followedUsers.has(Session.getPubKey()) ? html`
+                  <p><small>${t('follows_you')}</small></p>
+                `: this.props.id === SMS_VERIFIER_PUB ? html`
+                  <p><a href="https://iris-sms-auth.herokuapp.com/?pub=${Session.getPubKey()}">${t('ask_for_verification')}</a></p>
+                ` : ''}
+                <button onClick=${() => route('/chat/' + this.props.id)}>${t('send_message')}</button>
+                ${uuid ? '' : html`
+                  <${CopyButton} text=${t('copy_link')} title=${this.state.name} copyStr=${'https://iris.to/' + window.location.hash}/>
+                `}
+                <button onClick=${() => $('#profile-page-qr').toggle()}>${t('show_qr_code')}</button>
+                <button class="show-settings" onClick=${() => this.onClickSettings()}>${t('settings')}</button>
               </div>
             </div>
           </div>
           <div class="profile-about visible-xs-flex">
-            <p class="profile-about-content" placeholder=${editable ? tr('about') : ''} contenteditable=${editable} onInput=${e => this.onAboutInput(e)}>${this.state.about}</p>
+            <p class="profile-about-content" placeholder=${editable ? t('about') : ''} contenteditable=${editable} onInput=${e => this.onAboutInput(e)}>${this.state.about}</p>
           </div>
 
           ${this.renderGroupSettings()}
@@ -188,19 +213,34 @@ class Group extends View {
           <p id="profile-page-qr" style="display:none" class="qr-container"></p>
           <div id="chat-settings" style="display:none">
             <hr/>
-            <h3>${tr('chat_settings')}</h3>
+            <h3>${t('chat_settings')}</h3>
+            <div class="profile-nicknames">
+              <h4>${t('nicknames')}</h4>
+              <p>
+                ${t('nickname')}:
+                <input value=${chat && chat.theirNickname} onInput=${e => chat && chat.put('nickname', e.target.value)}/>
+              </p>
+              ${uuid ? '' : html`
+                <p>
+                  ${t('their_nickname_for_you')}:
+                  <span>
+                    ${chat && chat.myNickname && chat.myNickname.length ? chat.myNickname : ''}
+                  </span>
+                </p>
+              `}
+            </div>
             <div class="notification-settings">
-              <h4>${tr('notifications')}</h4>
+              <h4>${t('notifications')}</h4>
               <input type="radio" id="notifyAll" name="notificationPreference" value="all"/>
-              <label for="notifyAll">${tr('all_messages')}</label><br/>
+              <label for="notifyAll">${t('all_messages')}</label><br/>
               <input type="radio" id="notifyMentionsOnly" name="notificationPreference" value="mentions"/>
-              <label for="notifyMentionsOnly">${tr('mentions_only')}</label><br/>
+              <label for="notifyMentionsOnly">${t('mentions_only')}</label><br/>
               <input type="radio" id="notifyNothing" name="notificationPreference" value="nothing"/>
-              <label for="notifyNothing">${tr('nothing')}</label><br/>
+              <label for="notifyNothing">${t('nothing')}</label><br/>
             </div>
             <hr/>
             <p>
-              <button class="delete-chat" onClick=${() => deleteChat(this.props.id)}>${tr('delete_chat')}</button>
+              <button class="delete-chat" onClick=${() => deleteChat(this.props.id)}>${t('delete_chat')}</button>
             </p>
             <hr/>
           </div>
@@ -218,6 +258,48 @@ class Group extends View {
       this.setState({isAdmin:false,uuid:null, memberCandidate:null});
       this.componentDidMount();
     }
+  }
+
+  userDidMount() {
+    const pub = this.props.id;
+    State.public.user(pub).get('follow').map().on((following,key,c,e) => {
+      this.eventListeners.push(e);
+      if (following) {
+        this.followedUsers.add(key);
+      } else {
+        this.followedUsers.delete(key);
+      }
+      this.setState({followedUserCount: this.followedUsers.size});
+    });
+    State.local.get('follows').map().once((following,key) => {
+      if (following) {
+        State.public.user(key).get('follow').get(pub).once(following => {
+          if (following) {
+            this.followers.add(key);
+            this.setState({followerCount: this.followers.size});
+          }
+        });
+      }
+    });
+    State.public.user(pub).get('profile').get('name').on((name,a,b,e) => {
+      document.title = name || document.title;
+      this.eventListeners.push(e);
+      if (!$('#profile .profile-name:focus').length) {
+        this.setState({name});
+      }
+    });
+    State.public.user(pub).get('profile').get('photo').on((photo,a,b,e) => {
+      this.eventListeners.push(e);
+      this.setState({photo});
+    });
+    State.public.user(pub).get('profile').get('about').on((about,a,b,e) => {
+      this.eventListeners.push(e);
+      if (!$('#profile .profile-about-content:focus').length) {
+        this.setState({about});
+      } else {
+        $('#profile .profile-about-content:not(:focus)').text(about);
+      }
+    });
   }
 
   groupDidMount() {
@@ -269,7 +351,7 @@ class Group extends View {
     }
     qrCodeEl.empty();
     new QRCode(qrCodeEl[0], {
-      text: 'https://iris.to/' + window.location.pathname,
+      text: 'https://iris.to/' + window.location.hash,
       width: 300,
       height: 300,
       colorDark : "#000000",
@@ -278,6 +360,8 @@ class Group extends View {
     });
   }
 }
+
+var newGroupParticipant;
 
 function areWeAdmin(uuid) {
   const me = Session.channels[uuid].participantProfiles[Session.getKey().pub];

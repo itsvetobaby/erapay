@@ -93,11 +93,10 @@ class ChatMessageForm extends Component {
   }
 
   onMsgTextInput(event) {
-    const channel = Session.channels[this.props.activeChat];
     const val = $(event.target).val();
     this.isTyping = this.isTyping !== undefined ? this.isTyping : false;
     const getIsTyping = () => val.length > 0;
-    const setTyping = () => channel.setTyping(getIsTyping());
+    const setTyping = () => Session.channels[this.props.activeChat].setTyping(getIsTyping());
     const setTypingThrottled = _.throttle(setTyping, 1000);
     if (this.isTyping === getIsTyping()) {
       setTypingThrottled();
@@ -161,7 +160,7 @@ class ChatMessageForm extends Component {
   async webPush(msg) {
     const chat = Session.channels[this.props.activeChat];
     const myKey = Session.getKey();
-    const shouldWebPush = (window.location.pathname === '/chat/' + myKey.pub) || !(chat.activity);
+    const shouldWebPush = (window.location.hash === '#/chat/' + myKey.pub) || !(chat.activity);
     if (shouldWebPush && chat.webPushSubscriptions) {
       const subscriptions = [];
       const participants = Object.keys(chat.webPushSubscriptions);

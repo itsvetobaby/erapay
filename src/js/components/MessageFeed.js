@@ -12,33 +12,25 @@ class MessageFeed extends Component {
     this.eventListeners = {};
   }
 
-  handleMessage(v, k, x, e, from) {
-    if (from) { k = k + from; }
-    if (!this.eventListeners['node']) {
-      this.eventListeners['node'] = e;
-    }
-    if (v) {
-      this.mappedMessages.set(k, this.props.keyIsMsgHash ? k : v);
-    } else {
-      this.mappedMessages.delete(k);
-    }
-    this.setState({
-      sortedMessages: Array.from(this.mappedMessages.keys()).sort().reverse().map(k => this.mappedMessages.get(k))
-    })
-  }
-
   componentDidMount() {
+    this.props.node.map().on((v, k, x, e) => {
+      if (!this.eventListeners['node']) {
+        this.eventListeners['node'] = e;
+      }
+      if (v) {
+        this.mappedMessages.set(k, this.props.keyIsMsgHash ? k : v);
+      } else {
+        this.mappedMessages.delete(k);
+      }
+      this.setState({
+        sortedMessages: Array.from(this.mappedMessages.keys()).sort().reverse().map(k => this.mappedMessages.get(k))
+      })
+    });
     let first = true;
     State.local.get('scrollUp').on(() => {
       !first && Helpers.animateScrollTop('.main-view');
       first = false;
     });
-    if (this.props.node) {
-      this.props.node.map().on((...args) => this.handleMessage(...args));
-    } else if (this.props.group && this.props.path) { // TODO: make group use the same basic gun api
-      const group = State.local.get('groups').get(this.props.group);
-      State.group(group).map(this.props.path, (...args) => this.handleMessage(...args));
-    }
   }
 
   unsubscribe() {
@@ -47,13 +39,9 @@ class MessageFeed extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const prevNodeId = prevProps.node && prevProps.node._ && prevProps.node._.id;
-    const newNodeId = this.props.node && this.props.node._ && this.props.node._.id;
-    if (prevNodeId !== newNodeId || this.props.group !== prevProps.group || this.props.path !== prevProps.path) {
+    if (this.props.node._.id !== prevProps.node._.id) {
       this.unsubscribe();
-      this.mappedMessages = new Map();
-      this.setState({sortedMessages: []});
-      this.componentDidMount();
+      this.setState({sortedMessages: [], mappedMessages: new Map()});
     }
   }
 
@@ -62,17 +50,98 @@ class MessageFeed extends Component {
   }
 
   render() {
-    const thumbnails = this.props.thumbnails ? 'thumbnail-items' : '';
     return html`
       <div class="feed-container">
-        <${ScrollViewport} class=${thumbnails} rowHeight=${165}>
+        <${ScrollViewport} rowHeight=${165}>
           ${this.state.sortedMessages.map(
-            hash => typeof hash === 'string' ? html`<${PublicMessage} thumbnail=${this.props.thumbnails} filter=${this.props.filter} hash=${hash} key=${hash} showName=${true} />` : ''
+            hash => typeof hash === 'string' ? html`<${PublicMessage} filter=${this.props.filter} hash=${hash} key=${hash} showName=${true} />` : ''
           )}
         </${ScrollViewport}>
       </div>
     `;
   }
+  /*
+  adjustPaddings(isScrollDown) {
+    const container = document.getElementById("container");
+    const currentPaddingTop = getNumFromStyle(container.style.paddingTop);
+    const currentPaddingBottom = getNumFromStyle(container.style.paddingBottom);
+    const remPaddingsVal = 198 * (size / 2); // TODO: calculate actual element heights
+    if (isScrollDown) {
+      container.style.paddingTop = currentPaddingTop + remPaddingsVal + "px";
+      container.style.paddingBottom = currentPaddingBottom === 0 ? "0px" : currentPaddingBottom - remPaddingsVal + "px";
+    } else {
+      container.style.paddingBottom = currentPaddingBottom + remPaddingsVal + "px";
+      if (currentPaddingTop === 0) {
+        $(window).scrollTop($('#post0').offset().top + remPaddingsVal);
+      } else {
+        container.style.paddingTop = currentPaddingTop - remPaddingsVal + "px";
+      }
+    }
+  }
+
+  topSentCallback(entry) {
+    const container = document.getElementById("container");
+
+    const currentY = entry.boundingClientRect.top;
+    const currentRatio = entry.intersectionRatio;
+    const isIntersecting = entry.isIntersecting;
+
+    // conditional check for Scrolling up
+    if (
+      currentY > topSentinelPreviousY &&
+      isIntersecting &&
+      currentRatio >= topSentinelPreviousRatio &&
+      scroller.center !== previousUpIndex && // stop if no new results were received
+      scroller.opts.stickTo !== 'top'
+    ) {
+      previousUpIndex = scroller.center;
+      adjustPaddings(false);
+      scroller.up(size / 2);
+    }
+    topSentinelPreviousY = currentY;
+    topSentinelPreviousRatio = currentRatio;
+  }
+
+  botSentCallback(entry) {
+    const currentY = entry.boundingClientRect.top;
+    const currentRatio = entry.intersectionRatio;
+    const isIntersecting = entry.isIntersecting;
+
+    // conditional check for Scrolling down
+    if (
+      currentY < bottomSentinelPreviousY &&
+      currentRatio > bottomSentinelPreviousRatio &&
+      isIntersecting &&
+      scroller.center !== previousDownIndex &&  // stop if no new results were received
+      scroller.opts.stickTo !== 'bottom'
+    ) {
+      previousDownIndex = scroller.center;
+      adjustPaddings(true);
+      scroller.down(size / 2);
+    }
+    bottomSentinelPreviousY = currentY;
+    bottomSentinelPreviousRatio = currentRatio;
+  }
+
+  initIntersectionObserver() {
+    const options = {
+      //rootMargin: '190px',
+    }
+
+    const callback = entries => {
+      entries.forEach(entry => {
+        if (entry.target.id === 'post0') {
+          topSentCallback(entry);
+        } else if (entry.target.id === `post${size - 1}`) {
+          botSentCallback(entry);
+        }
+      });
+    }
+
+    var observer = new IntersectionObserver(callback, options); // TODO: It's possible to quickly scroll past the sentinels without them firing. Top and bottom sentinels should extend to page top & bottom?
+    observer.observe(document.querySelector("#post0"));
+    observer.observe(document.querySelector(`#post${size - 1}`));
+  } */
 }
 
 export default MessageFeed;

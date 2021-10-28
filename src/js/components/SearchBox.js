@@ -16,8 +16,7 @@ class SearchBox extends Component {
     this.state = {results:[]};
     this.debouncedIndexAndSearch = _.debounce(() => {
       const options = {keys: ['name'], includeScore: true, includeMatches: true, threshold: 0.3};
-      const values = Object.values(_.omit(Session.getFollows(), Object.keys(State.blockedUsers)));
-      this.fuse = new Fuse(values, options); // TODO: this gets called all the time. slow?
+      this.fuse = new Fuse(Object.values(Session.getFollows()), options); // TODO: this gets reinitialized with Header on each view change. slow?
       this.search();
     }, 200);
   }
@@ -32,9 +31,9 @@ class SearchBox extends Component {
   }
 
   componentDidMount() {
-    State.local.get('groups').get('everyone').map().on(isFollowing => {
+    State.local.get('follows').map().on(follows => {
       this.hasFollows = this.hasFollows || Object.keys(Session.getFollows()).length > 1;
-      isFollowing && this.debouncedIndexAndSearch();
+      follows && this.debouncedIndexAndSearch();
     });
     State.local.get('activeRoute').on((a,b,c,e) => {
       this.eventListeners['activeRoute'] = e;
@@ -70,7 +69,7 @@ class SearchBox extends Component {
     if (!query) { return; }
 
     if (this.props.onSelect) {
-      const s = query.split('https://iris.to/profile/');
+      const s = query.split('https://iris.to/#/profile/');
       if (s.length > 1) {
         return this.props.onSelect({key: s[1]});
       }

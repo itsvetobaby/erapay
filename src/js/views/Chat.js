@@ -35,6 +35,8 @@ function copyMyChatLinkClicked(e) {
   }, 2000);
 }
 
+const getNumFromStyle = numStr => Number(numStr.substring(0, numStr.length - 2));
+
 class Chat extends View {
   constructor() {
     super();
@@ -51,8 +53,7 @@ class Chat extends View {
     this.setState({
       sortedMessages: this.sortedMessages,
       sortedParticipants: [],
-      showParticipants: true,
-      stickToBottom: true
+      showParticipants: true
     });
     this.iv = null;
     this.chat = null;
@@ -81,7 +82,7 @@ class Chat extends View {
     State.local.get('channels').get(this.props.id).get('participants').map().on((v, k, b, e) => {
       this.eventListeners['participants'] = e;
       const hasAlready = !!this.participants[k];
-      this.participants[k] = v;
+      this.participants[k] = v;
       if (!!v && !hasAlready) {
         State.public.user(k).get('activity').on((activity, a, b, e) => {
           this.eventListeners[k + 'activity'] = e;
@@ -104,15 +105,6 @@ class Chat extends View {
     const container = document.getElementById("message-list");
     container.style.paddingBottom = 0;
     container.style.paddingTop = 0;
-    const el = $("#message-view");
-    el.off('scroll').on('scroll', () => {
-      const scrolledToBottom = (el[0].scrollHeight - el.scrollTop() == el.outerHeight());
-      if (this.state.stickToBottom && !scrolledToBottom) {
-        this.setState({stickToBottom: false});
-      } else if (!this.state.stickToBottom && scrolledToBottom) {
-        this.setState({stickToBottom: true});
-      }
-    });
   }
 
   setSortedParticipants() {
@@ -142,23 +134,19 @@ class Chat extends View {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.state.stickToBottom) {
-      Helpers.scrollToMessageListBottom();
-    }
     if (prevProps.id !== this.props.id) {
       $('#not-seen-by-them').hide();
       this.componentDidMount();
     } else {
-      $('.msg-content img').off('load').on('load', () => this.state.stickToBottom && Helpers.scrollToMessageListBottom());
-      setTimeout(() => {
-        if (this.chat && !this.chat.uuid && this.props.id !== Session.getPubKey()) {
-          if ($('.msg.our').length && !$('.msg.their').length && !this.chat.theirMsgsLastSeenTime) {
-            $('#not-seen-by-them').slideDown();
-          } else {
-            $('#not-seen-by-them').slideUp();
-          }
+      Helpers.scrollToMessageListBottom();
+      $('.msg-content img').off('load').on('load', () => Helpers.scrollToMessageListBottom());
+      if (this.chat && !this.chat.uuid) {
+        if ($('.msg.our').length && !$('.msg.their').length && !this.chat.theirMsgsLastSeenTime) {
+          $('#not-seen-by-them').slideDown();
+        } else {
+          $('#not-seen-by-them').slideUp();
         }
-      }, 2000);
+      }
     }
   }
 
@@ -216,7 +204,7 @@ class Chat extends View {
     let previousDateStr;
     let previousFrom;
     const msgListContent = [];
-    this.state.sortedMessages && Object.values(this.state.sortedMessages).forEach(msg => {
+    this.state.sortedMessages && Object.values(this.state.sortedMessages).forEach((msg, i) => {
       if (typeof msg !== 'object') {
         try {
           msg = JSON.parse(msg);
@@ -251,10 +239,45 @@ class Chat extends View {
     const participants = this.state.sortedParticipants;
 
     return html`
-    <${ChatList} class=${this.props.id ? 'hidden-xs' : ''}/>
-    <div id="chat-main" class="${this.props.id ? '' : 'hidden-xs'}">
+
+
+    <style>
+      div#chat-view {
+          margin-top: 13em !important;
+      }
+
+      .chat-list {
+        margin-top: 2em;
+    }
+
+    div#chat-view {
+        margin-left: 3em
+    }
+    </style>
+
+        <div class="container lowerThis" style="position: fixed; top: 1.3em; margin-left: -1.7em  ">
+          <div class="columns twelve subMenu" style="padding-bottom: 3px; padding-top: 10px; margin-left: 0px;  background-color: white; display: flex; padding-right: 2em; margin-right: 1em">
+            <div class="glow" style=" color: #000 !important;  font-size: 20px; font-weight: 400; border: 1px solid #c5c5c5; border-radius: 3px; padding: 0px" class="">
+
+              <button class="" style="margin-right: 0px; padding: 3px 10px; margin-left: 0em;   height: 100%; margin-right: 0px; margin-bottom: 0px; border-radius: 0px; background-color: #ffffff00 ;  ">
+                <a href="/store/${Session.getPubKey()}"><i class="far fa-user" style=" color: #c5c5c5"></i><iris-text style="margin-left: 1em; color: #c5c5c5" path="profile/name" user=${Session.getPubKey()} /></a>
+              </button>
+            </div>
+          </div>
+          <div class="columns twelve">
+            <div style="width:100%; margin-top: -1em; border-bottom: 2px solid grey; background-color: ; padding: 5px;">
+              <h2 class="" style="font-size: 2.6em">ORDERS</h2>
+    
+
+            </div><br/>
+            </div>
+        </div>
+
+
+    <${ChatList}  class=${this.props.id ? 'hidden-xs' : ''}/>
+    <div  id="chat-main" class="${this.props.id ? '' : 'hidden-xs'}">
     ${this.props.id && this.props.id.length > 20 ? html`
-      <div class="main-view" id="message-view" onScroll=${e => this.onMessageViewScroll(e)}>
+      <div class="main-view" id="message-view"  onScroll=${e => this.onMessageViewScroll(e)}>
         <div id="message-list">
           <div id="topsentinel"></div>
           ${msgListContent}
@@ -263,6 +286,7 @@ class Chat extends View {
         <div id="attachment-preview" class="attachment-preview" style="display:none"></div>
       </div>` : html`<${NewChat}/>`
     }
+
     ${this.props.id && this.props.id.length > 20 ? html`
       <div id="scroll-down-btn" style="display:none;" onClick=${() => this.scrollDown()}>${caretDownSvg}</div>
       <div id="not-seen-by-them" style="display: none">
