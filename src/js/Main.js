@@ -289,7 +289,7 @@ class Main extends Component {
       ` : html`<${Login}/>`;
     }
     return html`
-      <div id="main-content">
+      <div class="container mx-auto px-0" id="main-content">
         ${content}
       </div>
     `;
