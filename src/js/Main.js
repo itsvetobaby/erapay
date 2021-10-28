@@ -14,7 +14,6 @@ import { translate as t } from './Translation.js';
 import Settings from './views/Settings.js';
 import LogoutConfirmation from './views/LogoutConfirmation.js';
 
-import Chat from './views/Chat.js';
 import Pricing from './views/Pricing.js';
 
 import Mesh from './views/Mesh.js';
@@ -93,7 +92,6 @@ const APPLICATIONBRAND = [ // TODO: move editable shortcuts to localState gun
 const APPLICATIONS = [ // TODO: move editable shortcuts to localState gun
 
   {url: '/orders', text: "Orders", icon: Icons.store , classCss: "midCon"},
-  {url: '/chat', text: "Messages", icon: Icons.store , classCss: "midCon"},
 
   
 ];
@@ -128,59 +126,33 @@ class Menu extends Component {
     const pub = Session.getPubKey();
     return html`
  
-      <div class="application-list ">
-        <div class="container" style="padding: 0% 0.8%;">
-          <div class="columns twelve">
-            ${APPLICATIONBRAND.map(a => {
-              if (a.url) {
-                return html`
-                  <${a.native ? 'a' : Link} class="flex " style="margin-top: 0px" onClick=${() => this.menuLinkClicked()} activeClassName="" href=${a.url}>
+    <section >
+    <nav class="relative px-6 py-6">
+      <div class="flex items-center">
 
-                    <span class="text right ${a.classCss}">${a.text}</span>
-                  <//>`;
-              } else {
-                return html`<br/><br/>`;
-              }
-            })}
-          </div>
-          <div class="columns twelve hideAppl" style="display: flex;padding-bottom: 10px">
-            <div class="visible-xs-block">
-              <${Link} onClick=${() => this.menuLinkClicked()} activeClassName="active" href="/profile/${pub}">
-                <span class="icon"><${Identicon} str=${pub} width=40/></span>
-                <span class="text" style="font-size: 1.2em;border:0;margin-left: 7px;"><iris-text user="${pub}" path="profile/name" editable="false"/></span>
-              <//>
-              <br/><br/>
-            </div>
-
-            ${APPLICATIONS.map(a => {
-              if (a.url) {
-                return html`
-                  <${a.native ? 'a' : Link} class="flex  menuItem" style="margin-top: 0px" onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${a.url}>
-
-                    <span class="text right ${a.classCss}">${a.text}</span>
-                  <//>`;
-              } else {
-                return html`<br/><br/>`;
-              }
-            })}
-
-            <div class="flex-auto"></div>
-
-            ${APPLICATIONSSECOND.map(b => {
-              if (b.url) {
-                return html`
-                  <${b.native ? 'a' : Link} class="flex menuItem" style="margin-top: 0px" onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${b.url}>
-
-                    <span class="text right ${b.classCss}">${b.text}</span>
-                  <//>`;
-              } else {
-                return html`<br/><br/>`;
-              }
-            })}
-          </div>
+      ${APPLICATIONBRAND.map(a => {
+        if (a.url) {
+          return html`
+            <${a.native ? 'a' : Link} onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${a.url}>
+              <span class="text-3xl font-bold leading-none" >${a.text}</span>
+            <//>`;
+        } else {
+          return html`<br/><br/>`;
+        }
+      })}
+        ${APPLICATIONS.map(a => {
+          if (a.url) {
+            return html`
+              <${a.native ? 'a' : Link} class=${a.classCss} onClick=${() => this.menuLinkClicked()} activeClassName="active" href=${a.url}>
+                <span class="text-sm text-gray-400 hover:text-gray-500" >${a.text}</span>
+              <//>`;
+          } else {
+            return html`<br/><br/>`;
+          }
+        })}
         </div>
-        
-      </div>
+    </nav>
+  </section>
     `;
   }
 }
@@ -241,7 +213,6 @@ class Main extends Component {
   
 
               <${Login} path="/login"/>
-              <${Chat} path="/chat/:id?"/>
 
        
 
@@ -251,7 +222,7 @@ class Main extends Component {
 
               <${About} path="/"/>
               <${About} path="/about"/>
-              
+
               <${Pricing} path="/pricing"/>
 
               <${Settings} path="/settings"/>
